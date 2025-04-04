@@ -1,0 +1,35 @@
+# SPDX-FileCopyrightText: The RamenDr authors
+# SPDX-License-Identifier: Apache-2.0
+
+---
+name: Release
+
+on:
+  release:
+    types: [created]
+
+permissions:
+    contents: write
+    packages: write
+
+jobs:
+  release-matrix:
+    name: Release binaries
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, windows, darwin]
+        goarch: [amd64, arm64]
+        exclude:
+          - goarch: arm64
+            goos: windows
+    steps:
+    - uses: actions/checkout@v4
+    - uses: wangyoucao577/go-release-action@v1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        goos: ${{ matrix.goos }}
+        goarch: ${{ matrix.goarch }}
+        md5sum: FALSE
+        compress_assets: OFF
+        build_command: make ramenctl
