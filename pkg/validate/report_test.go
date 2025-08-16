@@ -21,9 +21,9 @@ func TestSummaryAdd(t *testing.T) {
 	s.Add(&report.Validated{State: report.Stale})
 	s.Add(&report.Validated{State: report.OK})
 	s.Add(&report.Validated{State: report.Stale})
-	s.Add(&report.Validated{State: report.Error})
+	s.Add(&report.Validated{State: report.Problem})
 
-	expected := Summary{OK: 3, Stale: 2, Error: 1}
+	expected := Summary{OK: 3, Stale: 2, Problem: 1}
 	if s != expected {
 		t.Fatalf("expected %+v, got %+v", expected, s)
 	}
@@ -38,19 +38,19 @@ func TestSummaryHasProblems(t *testing.T) {
 		{"empty", Summary{}, false},
 		{"ok", Summary{OK: 5}, false},
 		{"only stale", Summary{Stale: 2}, true},
-		{"only error", Summary{Error: 4}, true},
-		{"error and stale", Summary{Stale: 2, Error: 3}, true},
+		{"only problem", Summary{Problem: 4}, true},
+		{"problem and stale", Summary{Stale: 2, Problem: 3}, true},
 	}
 	for _, tc := range cases {
-		if got := tc.summary.HasProblems(); got != tc.expected {
+		if got := tc.summary.HasIssues(); got != tc.expected {
 			t.Errorf("%s: expected %v, got %v", tc.name, tc.expected, got)
 		}
 	}
 }
 
 func TestSummaryString(t *testing.T) {
-	s := Summary{OK: 1, Stale: 0, Error: 2}
-	expected := "1 ok, 0 stale, 2 errors"
+	s := Summary{OK: 1, Stale: 0, Problem: 2}
+	expected := "1 ok, 0 stale, 2 problem"
 	if s.String() != expected {
 		t.Fatalf("expected %q, got %q", expected, s.String())
 	}
@@ -101,7 +101,7 @@ func TestReportNotEqual(t *testing.T) {
 func TestReportRoundtrip(t *testing.T) {
 	r1 := &Report{
 		Report:  report.NewReport("name", &config.Config{}),
-		Summary: Summary{OK: 3, Stale: 2, Error: 1},
+		Summary: Summary{OK: 3, Stale: 2, Problem: 1},
 	}
 	b, err := yaml.Marshal(r1)
 	if err != nil {

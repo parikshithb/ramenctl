@@ -133,9 +133,9 @@ func (c *Command) validateGatheredApplicationData(drpcName, drpcNamespace string
 		return false
 	}
 
-	if c.report.Summary.HasProblems() {
+	if c.report.Summary.HasIssues() {
 		step.Status = report.Failed
-		msg := "Problems found during validation"
+		msg := "Issues found during validation"
 		console.Error(msg)
 		log.Errorf("%s: %s", msg, c.report.Summary)
 		return false
@@ -243,11 +243,11 @@ func (c *Command) validatedDRPCPhase(drpc *ramenapi.DRPlacementControl) report.V
 
 	stablePhase, err := ramen.StablePhase(drpc.Spec.Action)
 	if err != nil {
-		validated.State = report.Error
+		validated.State = report.Problem
 		validated.Description = err.Error()
 	} else {
 		if drpc.Status.Phase != stablePhase {
-			validated.State = report.Error
+			validated.State = report.Problem
 			validated.Description = fmt.Sprintf("Waiting for stable phase %q", stablePhase)
 		} else {
 			validated.State = report.OK
@@ -266,7 +266,7 @@ func (c *Command) validatedDRPCProgression(
 	// We expect a stable progression (Completed). An application should not be in unstable state
 	// for long time, so it we see unstable progression it requires investigation.
 	if drpc.Status.Progression != ramenapi.ProgressionCompleted {
-		validated.State = report.Error
+		validated.State = report.Problem
 		validated.Description = fmt.Sprintf(
 			"Waiting for progression %q",
 			ramenapi.ProgressionCompleted,
@@ -288,7 +288,7 @@ func (c *Command) validatedVRGState(
 	// We expect the stable state. An application should not be in unstable state for long time, so
 	// it we see unstable state it requires investigation.
 	if vrg.Status.State != stableState {
-		validated.State = report.Error
+		validated.State = report.Problem
 		validated.Description = fmt.Sprintf("Waiting to become %q", stableState)
 	} else {
 		validated.State = report.OK
@@ -305,7 +305,7 @@ func (c *Command) validatedProtectedPVCPhase(
 
 	// Protected PVC must be bound; anything else seen for long time requires investigation.
 	if pvc.Status.Phase != corev1.ClaimBound {
-		validated.State = report.Error
+		validated.State = report.Problem
 		validated.Description = fmt.Sprintf("PVC is not %q", corev1.ClaimBound)
 	} else {
 		validated.State = report.OK
@@ -320,7 +320,7 @@ func (c *Command) validatedAction(action string) report.ValidatedString {
 	if slices.Contains(ramen.Actions, action) {
 		validated.State = report.OK
 	} else {
-		validated.State = report.Error
+		validated.State = report.Problem
 		validated.Description = fmt.Sprintf("Unknown action %q", action)
 	}
 	c.report.Summary.Add(&validated)

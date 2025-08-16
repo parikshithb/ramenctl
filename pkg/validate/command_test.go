@@ -132,7 +132,7 @@ func TestValidatedDeleted(t *testing.T) {
 		expected := report.ValidatedBool{
 			Value: true,
 			Validated: report.Validated{
-				State:       report.Error,
+				State:       report.Problem,
 				Description: resourceDoesNotExist,
 			},
 		}
@@ -150,7 +150,7 @@ func TestValidatedDeleted(t *testing.T) {
 		expected := report.ValidatedBool{
 			Value: true,
 			Validated: report.Validated{
-				State:       report.Error,
+				State:       report.Problem,
 				Description: resourceWasDeleted,
 			},
 		}
@@ -172,7 +172,7 @@ func TestValidatedDeleted(t *testing.T) {
 	})
 
 	t.Run("update summary", func(t *testing.T) {
-		expected := Summary{OK: 1, Error: 2}
+		expected := Summary{OK: 1, Problem: 2}
 		if cmd.report.Summary != expected {
 			t.Fatalf("expected summary %q, got %q", expected, cmd.report.Summary)
 		}
@@ -209,7 +209,7 @@ func TestValidatedAction(t *testing.T) {
 		expected := report.ValidatedString{
 			Value: action,
 			Validated: report.Validated{
-				State:       report.Error,
+				State:       report.Problem,
 				Description: "Unknown action \"Failback\"",
 			},
 		}
@@ -220,7 +220,7 @@ func TestValidatedAction(t *testing.T) {
 	})
 
 	t.Run("update summary", func(t *testing.T) {
-		expected := Summary{OK: 3, Error: 1}
+		expected := Summary{OK: 3, Problem: 1}
 		if cmd.report.Summary != expected {
 			t.Fatalf("expected summary %q, got %q", expected, cmd.report.Summary)
 		}
@@ -288,7 +288,7 @@ func TestValidatedDRPCPhaseError(t *testing.T) {
 				}
 				expected := report.ValidatedString{
 					Validated: report.Validated{
-						State:       report.Error,
+						State:       report.Problem,
 						Description: fmt.Sprintf("Waiting for stable phase %q", group.stable),
 					},
 					Value: string(tc.phase),
@@ -305,7 +305,7 @@ func TestValidatedDRPCPhaseError(t *testing.T) {
 	for _, group := range unstable {
 		errors += uint(len(group.cases))
 	}
-	expected := Summary{Error: errors}
+	expected := Summary{Problem: errors}
 	if cmd.report.Summary != expected {
 		t.Fatalf("expected summary %q, got %q", expected, cmd.report.Summary)
 	}
@@ -417,7 +417,7 @@ func TestValidatedDRPCProgressionError(t *testing.T) {
 			}
 			expected := report.ValidatedString{
 				Validated: report.Validated{
-					State: report.Error,
+					State: report.Problem,
 					Description: fmt.Sprintf(
 						"Waiting for progression %q",
 						ramenapi.ProgressionCompleted,
@@ -432,7 +432,7 @@ func TestValidatedDRPCProgressionError(t *testing.T) {
 		})
 	}
 
-	expected := Summary{Error: uint(len(progressions))}
+	expected := Summary{Problem: uint(len(progressions))}
 	if cmd.report.Summary != expected {
 		t.Fatalf("expected summary %q, got %q", expected, cmd.report.Summary)
 	}
@@ -500,7 +500,7 @@ func TestValidatedVRGSTateError(t *testing.T) {
 			}
 			expected := report.ValidatedString{
 				Validated: report.Validated{
-					State:       report.Error,
+					State:       report.Problem,
 					Description: fmt.Sprintf("Waiting to become %q", tc.stableState),
 				},
 				Value: string(vrg.Status.State),
@@ -512,7 +512,7 @@ func TestValidatedVRGSTateError(t *testing.T) {
 		})
 	}
 
-	expected := Summary{Error: uint(len(cases))}
+	expected := Summary{Problem: uint(len(cases))}
 	if cmd.report.Summary != expected {
 		t.Fatalf("expected summary %q, got %q", expected, cmd.report.Summary)
 	}
@@ -567,7 +567,7 @@ func TestValidatedProtectedPVCError(t *testing.T) {
 			}
 			expected := report.ValidatedString{
 				Validated: report.Validated{
-					State:       report.Error,
+					State:       report.Problem,
 					Description: fmt.Sprintf("PVC is not %q", corev1.ClaimBound),
 				},
 				Value: string(pvc.Status.Phase),
@@ -579,7 +579,7 @@ func TestValidatedProtectedPVCError(t *testing.T) {
 		})
 	}
 
-	expected := Summary{Error: uint(len(cases))}
+	expected := Summary{Problem: uint(len(cases))}
 	if cmd.report.Summary != expected {
 		t.Fatalf("expected summary %q, got %q", expected, cmd.report.Summary)
 	}

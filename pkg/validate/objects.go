@@ -34,7 +34,7 @@ func validatedCondition(
 	}
 
 	if condition.Status != expectedStatus {
-		validated.State = report.Error
+		validated.State = report.Problem
 		validated.Description = condition.Message
 		return validated
 	}

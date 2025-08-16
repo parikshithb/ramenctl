@@ -105,13 +105,13 @@ func (c *Command) validatedDeleted(obj client.Object) report.ValidatedBool {
 	if obj == nil {
 		// Resource is missing.
 		validated.Value = true
-		validated.State = report.Error
+		validated.State = report.Problem
 		validated.Description = "Resource does not exist"
 	} else {
 		if isDeleted(obj) {
 			// Resource was deleted.
 			validated.Value = true
-			validated.State = report.Error
+			validated.State = report.Problem
 			validated.Description = "Resource was deleted"
 		} else {
 			// Resource not deleted.

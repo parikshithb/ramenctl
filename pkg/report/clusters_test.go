@@ -49,7 +49,7 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 	})
 	t.Run("hub drclusters state", func(t *testing.T) {
 		c2 := testClusterStatus()
-		c2.Hub.DRClusters.State = report.Error
+		c2.Hub.DRClusters.State = report.Problem
 		checkClustersNotEqual(t, c1, c2)
 	})
 	t.Run("hub drcluster name", func(t *testing.T) {
@@ -64,7 +64,7 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 	})
 	t.Run("hub drcluster conditions", func(t *testing.T) {
 		c2 := testClusterStatus()
-		c2.Hub.DRClusters.Value[0].Conditions[0].State = report.Error
+		c2.Hub.DRClusters.Value[0].Conditions[0].State = report.Problem
 		checkClustersNotEqual(t, c1, c2)
 	})
 
@@ -82,7 +82,7 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 	})
 	t.Run("hub drpolicies state", func(t *testing.T) {
 		c2 := testClusterStatus()
-		c2.Hub.DRPolicies.State = report.Error
+		c2.Hub.DRPolicies.State = report.Problem
 		checkClustersNotEqual(t, c1, c2)
 	})
 	t.Run("hub drpolicy name", func(t *testing.T) {
@@ -102,7 +102,7 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 	})
 	t.Run("hub drpolicy conditions", func(t *testing.T) {
 		c2 := testClusterStatus()
-		c2.Hub.DRPolicies.Value[0].Conditions[0].State = report.Error
+		c2.Hub.DRPolicies.Value[0].Conditions[0].State = report.Problem
 		checkClustersNotEqual(t, c1, c2)
 	})
 
@@ -125,7 +125,7 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 	})
 	t.Run("hub ramen configmap ramen controller type state", func(t *testing.T) {
 		c2 := testClusterStatus()
-		c2.Hub.Ramen.ConfigMap.RamenControllerType.State = report.Error
+		c2.Hub.Ramen.ConfigMap.RamenControllerType.State = report.Problem
 		checkClustersNotEqual(t, c1, c2)
 	})
 	t.Run("hub ramen configmap ramen controller type", func(t *testing.T) {
@@ -135,7 +135,7 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 	})
 	t.Run("hub ramen configmap s3storeprofiles state", func(t *testing.T) {
 		c2 := testClusterStatus()
-		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.State = report.Error
+		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.State = report.Problem
 		checkClustersNotEqual(t, c1, c2)
 	})
 	t.Run("hub ramen configmap s3storeprofiles name", func(t *testing.T) {
@@ -145,7 +145,7 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 	})
 	t.Run("hub ramen configmap s3storeprofiles secretref state", func(t *testing.T) {
 		c2 := testClusterStatus()
-		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.State = report.Error
+		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.State = report.Problem
 		checkClustersNotEqual(t, c1, c2)
 	})
 	t.Run("hub ramen configmap s3storeprofiles secretref value name", func(t *testing.T) {
@@ -173,7 +173,7 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 	})
 	t.Run("hub ramen deployment conditions", func(t *testing.T) {
 		c2 := testClusterStatus()
-		c2.Hub.Ramen.Deployment.Conditions[0].State = report.Error
+		c2.Hub.Ramen.Deployment.Conditions[0].State = report.Problem
 		checkClustersNotEqual(t, c1, c2)
 	})
 
@@ -211,7 +211,7 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 	})
 	t.Run("cluster ramen configmap ramen controller type state", func(t *testing.T) {
 		c2 := testClusterStatus()
-		c2.Clusters[0].Ramen.ConfigMap.RamenControllerType.State = report.Error
+		c2.Clusters[0].Ramen.ConfigMap.RamenControllerType.State = report.Problem
 		checkClustersNotEqual(t, c1, c2)
 	})
 	t.Run("cluster ramen configmap ramen controller type", func(t *testing.T) {
@@ -221,7 +221,7 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 	})
 	t.Run("cluster ramen configmap s3storeprofiles state", func(t *testing.T) {
 		c2 := testClusterStatus()
-		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.State = report.Error
+		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.State = report.Problem
 		checkClustersNotEqual(t, c1, c2)
 	})
 	t.Run("cluster ramen configmap s3storeprofiles profile name", func(t *testing.T) {
@@ -231,7 +231,7 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 	})
 	t.Run("cluster ramen configmap s3storeprofiles secretref state", func(t *testing.T) {
 		c2 := testClusterStatus()
-		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.State = report.Error
+		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.State = report.Problem
 		checkClustersNotEqual(t, c1, c2)
 	})
 	t.Run("cluster ramen configmap s3storeprofiles secretref value name", func(t *testing.T) {
@@ -251,7 +251,7 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 	})
 	t.Run("cluster ramen deployment conditions", func(t *testing.T) {
 		c2 := testClusterStatus()
-		c2.Clusters[0].Ramen.Deployment.Conditions[0].State = report.Error
+		c2.Clusters[0].Ramen.Deployment.Conditions[0].State = report.Problem
 		checkClustersNotEqual(t, c1, c2)
 	})
 }

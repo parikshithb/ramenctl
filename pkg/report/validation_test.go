@@ -18,7 +18,7 @@ func TestEmojiRoundtrip(t *testing.T) {
 		state report.ValidationState
 	}{
 		{"ok", report.OK},
-		{"error", report.Error},
+		{"problem", report.Problem},
 		{"stale", report.Stale},
 	}
 	for _, tc := range cases {

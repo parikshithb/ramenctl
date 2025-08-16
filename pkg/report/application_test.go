@@ -47,7 +47,7 @@ func TestReportApplicationStatusNotEqual(t *testing.T) {
 		a2.Hub.DRPC.Deleted = report.ValidatedBool{
 			Value: true,
 			Validated: report.Validated{
-				State:       report.Error,
+				State:       report.Problem,
 				Description: "DRPC does not exist",
 			},
 		}
@@ -82,7 +82,7 @@ func TestReportApplicationStatusNotEqual(t *testing.T) {
 		a2 := testApplicationStatus()
 		a2.Hub.DRPC.Progression = report.ValidatedString{
 			Validated: report.Validated{
-				State:       report.Error,
+				State:       report.Problem,
 				Description: "Waiting for stable progression",
 			},
 			Value: string(ramenapi.ProgressionFailingOverToCluster),
@@ -96,7 +96,7 @@ func TestReportApplicationStatusNotEqual(t *testing.T) {
 	})
 	t.Run("hub drpc conditions", func(t *testing.T) {
 		a2 := testApplicationStatus()
-		a2.Hub.DRPC.Conditions[0].State = report.Error
+		a2.Hub.DRPC.Conditions[0].State = report.Problem
 		checkApplicationsNotEqual(t, a1, a2)
 	})
 	t.Run("primary cluster name", func(t *testing.T) {
@@ -118,7 +118,7 @@ func TestReportApplicationStatusNotEqual(t *testing.T) {
 		a2 := testApplicationStatus()
 		a2.PrimaryCluster.VRG.Deleted = report.ValidatedBool{
 			Validated: report.Validated{
-				State:       report.Error,
+				State:       report.Problem,
 				Description: "VRG does not exist",
 			},
 			Value: true,
@@ -129,7 +129,7 @@ func TestReportApplicationStatusNotEqual(t *testing.T) {
 		a2 := testApplicationStatus()
 		a2.PrimaryCluster.VRG.State = report.ValidatedString{
 			Validated: report.Validated{
-				State:       report.Error,
+				State:       report.Problem,
 				Description: "Waiting to become \"Primary\"",
 			},
 			Value: string(ramenapi.SecondaryState),
@@ -143,7 +143,7 @@ func TestReportApplicationStatusNotEqual(t *testing.T) {
 	})
 	t.Run("primary cluster vrg conditions", func(t *testing.T) {
 		a2 := testApplicationStatus()
-		a2.PrimaryCluster.VRG.Conditions[0].State = report.Error
+		a2.PrimaryCluster.VRG.Conditions[0].State = report.Problem
 		checkApplicationsNotEqual(t, a1, a2)
 	})
 	t.Run("primary cluster vrg protectedpvcs nil", func(t *testing.T) {
@@ -170,7 +170,7 @@ func TestReportApplicationStatusNotEqual(t *testing.T) {
 		a2 := testApplicationStatus()
 		a2.PrimaryCluster.VRG.ProtectedPVCs[0].Deleted = report.ValidatedBool{
 			Validated: report.Validated{
-				State:       report.Error,
+				State:       report.Problem,
 				Description: "PVC does not exist",
 			},
 			Value: true,
@@ -181,7 +181,7 @@ func TestReportApplicationStatusNotEqual(t *testing.T) {
 		a2 := testApplicationStatus()
 		a2.PrimaryCluster.VRG.ProtectedPVCs[0].Phase = report.ValidatedString{
 			Validated: report.Validated{
-				State:       report.Error,
+				State:       report.Problem,
 				Description: "PVC is not \"Bound\"",
 			},
 			Value: "Terminating",
@@ -195,7 +195,7 @@ func TestReportApplicationStatusNotEqual(t *testing.T) {
 	})
 	t.Run("primary cluster vrg protectedpvcs conditions", func(t *testing.T) {
 		a2 := testApplicationStatus()
-		a2.PrimaryCluster.VRG.ProtectedPVCs[0].Conditions[0].State = report.Error
+		a2.PrimaryCluster.VRG.ProtectedPVCs[0].Conditions[0].State = report.Problem
 		checkApplicationsNotEqual(t, a1, a2)
 	})
 	t.Run("secondary cluster name", func(t *testing.T) {
@@ -217,7 +217,7 @@ func TestReportApplicationStatusNotEqual(t *testing.T) {
 		a2 := testApplicationStatus()
 		a2.SecondaryCluster.VRG.Deleted = report.ValidatedBool{
 			Validated: report.Validated{
-				State:       report.Error,
+				State:       report.Problem,
 				Description: "VRG does not exist",
 			},
 			Value: true,
@@ -228,7 +228,7 @@ func TestReportApplicationStatusNotEqual(t *testing.T) {
 		a2 := testApplicationStatus()
 		a2.SecondaryCluster.VRG.State = report.ValidatedString{
 			Validated: report.Validated{
-				State:       report.Error,
+				State:       report.Problem,
 				Description: "Waiting to become \"Secondary\"",
 			},
 			Value: string(ramenapi.PrimaryState),
@@ -242,7 +242,7 @@ func TestReportApplicationStatusNotEqual(t *testing.T) {
 	})
 	t.Run("secondary cluster vrg conditions", func(t *testing.T) {
 		a2 := testApplicationStatus()
-		a2.SecondaryCluster.VRG.Conditions[0].State = report.Error
+		a2.SecondaryCluster.VRG.Conditions[0].State = report.Problem
 		checkApplicationsNotEqual(t, a1, a2)
 	})
 }

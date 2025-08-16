@@ -18,8 +18,8 @@ const (
 	// Condition Generation does not match object generation.
 	Stale = ValidationState("stale ⭕")
 
-	// Error state such as missing or unexpected value.
-	Error = ValidationState("error ❌")
+	// Problem state such as missing or unexpected value.
+	Problem = ValidationState("problem ❌")
 )
 
 type Validation interface {

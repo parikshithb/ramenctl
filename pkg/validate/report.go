@@ -10,9 +10,9 @@ import (
 )
 
 type Summary struct {
-	Error uint `json:"error"`
-	Stale uint `json:"stale"`
-	OK    uint `json:"ok"`
+	Problem uint `json:"error"`
+	Stale   uint `json:"stale"`
+	OK      uint `json:"ok"`
 }
 
 // Report created by validate sub commands.
@@ -44,17 +44,17 @@ func (s *Summary) Add(v report.Validation) {
 		s.OK++
 	case report.Stale:
 		s.Stale++
-	case report.Error:
-		s.Error++
+	case report.Problem:
+		s.Problem++
 	}
 }
 
-// HasProblems returns true if there are any problems.
-func (s *Summary) HasProblems() bool {
-	return s.Stale > 0 || s.Error > 0
+// HasIssues returns true if there are any problems or stale results.
+func (s *Summary) HasIssues() bool {
+	return s.Stale > 0 || s.Problem > 0
 }
 
 // String returns a string representation.
 func (s Summary) String() string {
-	return fmt.Sprintf("%d ok, %d stale, %d errors", s.OK, s.Stale, s.Error)
+	return fmt.Sprintf("%d ok, %d stale, %d problem", s.OK, s.Stale, s.Problem)
 }
