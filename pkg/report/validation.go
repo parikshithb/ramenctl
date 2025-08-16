@@ -16,7 +16,7 @@ const (
 	OK = ValidationState("ok ✅")
 
 	// Condition Generation does not match object generation.
-	Stale = ValidationState("stale 🟠")
+	Stale = ValidationState("stale ⭕")
 
 	// Error state such as missing or unexpected value.
 	Error = ValidationState("error ❌")
