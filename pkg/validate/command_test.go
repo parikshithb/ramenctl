@@ -122,7 +122,7 @@ var (
 	}
 )
 
-// Command tests
+// Command common tests
 
 func TestValidatedDeleted(t *testing.T) {
 	cmd := testCommand(t, validateApplication, &validation.Mock{})
@@ -178,6 +178,8 @@ func TestValidatedDeleted(t *testing.T) {
 		}
 	})
 }
+
+// Command application tests
 
 func TestValidatedDRPCAction(t *testing.T) {
 	cmd := testCommand(t, validateApplication, &validation.Mock{})
