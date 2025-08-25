@@ -123,6 +123,17 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 		c2.Hub.Ramen.ConfigMap.Namespace = modified
 		checkClustersNotEqual(t, c1, c2)
 	})
+	t.Run("hub ramen configmap deleted", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Hub.Ramen.ConfigMap.Deleted = report.ValidatedBool{
+			Validated: report.Validated{
+				State:       report.Problem,
+				Description: "Resource does not exist",
+			},
+			Value: true,
+		}
+		checkClustersNotEqual(t, c1, c2)
+	})
 	t.Run("hub ramen configmap ramen controller type state", func(t *testing.T) {
 		c2 := testClusterStatus()
 		c2.Hub.Ramen.ConfigMap.RamenControllerType.State = report.Problem
@@ -169,6 +180,17 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 	t.Run("hub ramen deployment namespace", func(t *testing.T) {
 		c2 := testClusterStatus()
 		c2.Hub.Ramen.Deployment.Namespace = modified
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("hub ramen deployment deleted", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Hub.Ramen.Deployment.Deleted = report.ValidatedBool{
+			Validated: report.Validated{
+				State:       report.Problem,
+				Description: "Resource does not exist",
+			},
+			Value: true,
+		}
 		checkClustersNotEqual(t, c1, c2)
 	})
 	t.Run("hub ramen deployment conditions", func(t *testing.T) {
@@ -366,6 +388,11 @@ func testClusterStatus() *report.ClustersStatus {
 				ConfigMap: report.ConfigMapSummary{
 					Name:      "ramen-hub-operator-config",
 					Namespace: "ramen-system",
+					Deleted: report.ValidatedBool{
+						Validated: report.Validated{
+							State: report.OK,
+						},
+					},
 					RamenControllerType: report.ValidatedString{
 						Validated: report.Validated{
 							State: report.OK,
@@ -407,6 +434,11 @@ func testClusterStatus() *report.ClustersStatus {
 				Deployment: report.DeploymentSummary{
 					Name:      "ramen-hub-operator",
 					Namespace: "ramen-system",
+					Deleted: report.ValidatedBool{
+						Validated: report.Validated{
+							State: report.OK,
+						},
+					},
 					Conditions: []report.ValidatedCondition{
 						{
 							Validated: report.Validated{
@@ -431,6 +463,11 @@ func testClusterStatus() *report.ClustersStatus {
 					ConfigMap: report.ConfigMapSummary{
 						Name:      "ramen-dr-cluster-operator-config",
 						Namespace: "ramen-system",
+						Deleted: report.ValidatedBool{
+							Validated: report.Validated{
+								State: report.OK,
+							},
+						},
 						RamenControllerType: report.ValidatedString{
 							Validated: report.Validated{
 								State: report.OK,
@@ -472,6 +509,11 @@ func testClusterStatus() *report.ClustersStatus {
 					Deployment: report.DeploymentSummary{
 						Name:      "ramen-dr-cluster-operator",
 						Namespace: "ramen-system",
+						Deleted: report.ValidatedBool{
+							Validated: report.Validated{
+								State: report.OK,
+							},
+						},
 						Conditions: []report.ValidatedCondition{
 							{
 								Validated: report.Validated{
@@ -495,6 +537,11 @@ func testClusterStatus() *report.ClustersStatus {
 					ConfigMap: report.ConfigMapSummary{
 						Name:      "ramen-dr-cluster-operator-config",
 						Namespace: "ramen-system",
+						Deleted: report.ValidatedBool{
+							Validated: report.Validated{
+								State: report.OK,
+							},
+						},
 						RamenControllerType: report.ValidatedString{
 							Validated: report.Validated{
 								State: report.OK,
@@ -536,6 +583,11 @@ func testClusterStatus() *report.ClustersStatus {
 					Deployment: report.DeploymentSummary{
 						Name:      "ramen-dr-cluster-operator",
 						Namespace: "ramen-system",
+						Deleted: report.ValidatedBool{
+							Validated: report.Validated{
+								State: report.OK,
+							},
+						},
 						Conditions: []report.ValidatedCondition{
 							{
 								Validated: report.Validated{

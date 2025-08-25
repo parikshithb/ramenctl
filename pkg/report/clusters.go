@@ -32,6 +32,7 @@ type S3StoreProfilesSummary struct {
 type ConfigMapSummary struct {
 	Name                string                       `json:"name"`
 	Namespace           string                       `json:"namespace"`
+	Deleted             ValidatedBool                `json:"deleted"`
 	RamenControllerType ValidatedString              `json:"ramenControllerType"`
 	S3StoreProfiles     ValidatedS3StoreProfilesList `json:"s3StoreProfiles"`
 }
@@ -40,6 +41,7 @@ type ConfigMapSummary struct {
 type DeploymentSummary struct {
 	Name       string               `json:"name"`
 	Namespace  string               `json:"namespace"`
+	Deleted    ValidatedBool        `json:"deleted"`
 	Conditions []ValidatedCondition `json:"conditions,omitempty"`
 }
 
@@ -195,6 +197,9 @@ func (c *ConfigMapSummary) Equal(o *ConfigMapSummary) bool {
 	if c.Namespace != o.Namespace {
 		return false
 	}
+	if c.Deleted != o.Deleted {
+		return false
+	}
 	if c.RamenControllerType != o.RamenControllerType {
 		return false
 	}
@@ -231,6 +236,9 @@ func (d *DeploymentSummary) Equal(o *DeploymentSummary) bool {
 		return false
 	}
 	if d.Namespace != o.Namespace {
+		return false
+	}
+	if d.Deleted != o.Deleted {
 		return false
 	}
 	if !slices.Equal(d.Conditions, o.Conditions) {
