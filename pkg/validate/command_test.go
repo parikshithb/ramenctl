@@ -179,7 +179,7 @@ func TestValidatedDeleted(t *testing.T) {
 	})
 }
 
-func TestValidatedAction(t *testing.T) {
+func TestValidatedDRPCAction(t *testing.T) {
 	cmd := testCommand(t, validateApplication, &validation.Mock{})
 	known := []struct {
 		name   string
@@ -197,7 +197,7 @@ func TestValidatedAction(t *testing.T) {
 					State: report.OK,
 				},
 			}
-			validated := cmd.validatedAction(tc.action)
+			validated := cmd.validatedDRPCAction(tc.action)
 			if validated != expected {
 				t.Errorf("expected action %+v, got %+v", expected, validated)
 			}
@@ -213,7 +213,7 @@ func TestValidatedAction(t *testing.T) {
 				Description: "Unknown action \"Failback\"",
 			},
 		}
-		validated := cmd.validatedAction(action)
+		validated := cmd.validatedDRPCAction(action)
 		if validated != expected {
 			t.Fatalf("expected action %+v, got %+v", expected, validated)
 		}

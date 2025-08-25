@@ -193,7 +193,7 @@ func (c *Command) validateApplicationDRPC(
 	s.Namespace = drpc.Namespace
 	s.Deleted = c.validatedDeleted(drpc)
 	s.DRPolicy = drpc.Spec.DRPolicyRef.Name
-	s.Action = c.validatedAction(string(drpc.Spec.Action))
+	s.Action = c.validatedDRPCAction(string(drpc.Spec.Action))
 	s.Phase = c.validatedDRPCPhase(drpc)
 	s.Progression = c.validatedDRPCProgression(drpc)
 	s.Conditions = c.validatedConditions(drpc, drpc.Status.Conditions)
@@ -315,7 +315,7 @@ func (c *Command) validatedProtectedPVCPhase(
 	return validated
 }
 
-func (c *Command) validatedAction(action string) report.ValidatedString {
+func (c *Command) validatedDRPCAction(action string) report.ValidatedString {
 	validated := report.ValidatedString{Value: action}
 	if slices.Contains(ramen.Actions, action) {
 		validated.State = report.OK
