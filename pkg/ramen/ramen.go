@@ -35,6 +35,14 @@ const (
 	// from ramen/internal/controllers/drplacementcontrol.go
 	drpcAppNamespaceAnnotation = "drplacementcontrol.ramendr.openshift.io/app-namespace"
 
+	// HubOperatorName is the name of the deploymentg on the hub.
+	// TODO: discover the value from the cluster.
+	HubOperatorName = "ramen-hub-operator"
+
+	// DRClusterOperatorName is the name of the deploymentg on the managed clusters.
+	// TODO: discover the value from the cluster.
+	DRClusterOperatorName = "ramen-dr-cluster-operator"
+
 	// TODO: find a way to get this from ramen api. Available in the CRD under spec/names/plural.
 	// Should we gather the CRDs from the cluster?
 	drpcPlural      = "drplacementcontrols"
