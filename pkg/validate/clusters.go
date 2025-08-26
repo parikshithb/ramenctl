@@ -72,8 +72,7 @@ func (c *Command) validateGatheredClustersData() bool {
 	s := &report.ClustersStatus{}
 	c.report.ClustersStatus = s
 
-	err := c.validateClustersHub(&s.Hub)
-	if err != nil {
+	if err := c.validateClustersHub(&s.Hub); err != nil {
 		step.Status = report.Failed
 		console.Error("Failed to validate hub")
 		log.Error(err)
