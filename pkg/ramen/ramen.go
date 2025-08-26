@@ -43,6 +43,10 @@ const (
 	// TODO: discover the value from the cluster.
 	DRClusterOperatorName = "ramen-dr-cluster-operator"
 
+	// ConfigMapRamenConfigKeyName is the name configuration YAML in the ramen configmap.
+	// https://github.com/RamenDR/ramen/blob/ac64bd0bb67bcb194b938d52dc86bd165807987e/internal/controller/ramenconfig.go#L35
+	ConfigMapRamenConfigKeyName = "ramen_manager_config.yaml"
+
 	// TODO: find a way to get this from ramen api. Available in the CRD under spec/names/plural.
 	// Should we gather the CRDs from the cluster?
 	drpcPlural      = "drplacementcontrols"

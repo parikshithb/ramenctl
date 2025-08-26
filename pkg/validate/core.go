@@ -11,7 +11,9 @@ import (
 )
 
 const (
-	pvcPlural = "persistentvolumeclaims"
+	pvcPlural       = "persistentvolumeclaims"
+	configMapPlural = "configmaps"
+	secretPlural    = "secrets"
 )
 
 func readPVC(
@@ -27,4 +29,34 @@ func readPVC(
 		return nil, err
 	}
 	return pvc, nil
+}
+
+func readConfigMap(
+	reader gathering.OutputReader,
+	name, namespace string,
+) (*v1.ConfigMap, error) {
+	data, err := reader.ReadResource(namespace, configMapPlural, name)
+	if err != nil {
+		return nil, err
+	}
+	configMap := &v1.ConfigMap{}
+	if err := yaml.Unmarshal(data, configMap); err != nil {
+		return nil, err
+	}
+	return configMap, nil
+}
+
+func readSecret(
+	reader gathering.OutputReader,
+	name, namespace string,
+) (*v1.Secret, error) {
+	data, err := reader.ReadResource(namespace, secretPlural, name)
+	if err != nil {
+		return nil, err
+	}
+	secret := &v1.Secret{}
+	if err := yaml.Unmarshal(data, secret); err != nil {
+		return nil, err
+	}
+	return secret, nil
 }

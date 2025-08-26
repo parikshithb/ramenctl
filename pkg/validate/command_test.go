@@ -22,6 +22,7 @@ import (
 	"github.com/ramendr/ramenctl/pkg/command"
 	"github.com/ramendr/ramenctl/pkg/config"
 	"github.com/ramendr/ramenctl/pkg/gathering"
+	"github.com/ramendr/ramenctl/pkg/ramen"
 	"github.com/ramendr/ramenctl/pkg/report"
 	"github.com/ramendr/ramenctl/pkg/sets"
 	"github.com/ramendr/ramenctl/pkg/time"
@@ -705,6 +706,52 @@ func TestValidateClustersPassed(t *testing.T) {
 				},
 			},
 			Ramen: report.RamenSummary{
+				ConfigMap: report.ConfigMapSummary{
+					Name:      ramen.HubOperatorName + "-config",
+					Namespace: testConfig.Namespaces.RamenHubNamespace,
+					Deleted: report.ValidatedBool{
+						Validated: report.Validated{
+							State: report.OK,
+						},
+					},
+					RamenControllerType: report.ValidatedString{
+						Validated: report.Validated{
+							State: report.OK,
+						},
+						Value: string(ramenapi.DRHubType),
+					},
+					S3StoreProfiles: report.ValidatedS3StoreProfilesList{
+						Validated: report.Validated{
+							State: report.OK,
+						},
+						Value: []report.S3StoreProfilesSummary{
+							{
+								S3ProfileName: "minio-on-dr1",
+								S3SecretRef: report.ValidatedS3SecretRef{
+									Validated: report.Validated{
+										State: report.OK,
+									},
+									Value: corev1.SecretReference{
+										Name:      "ramen-s3-secret-dr1",
+										Namespace: testConfig.Namespaces.RamenHubNamespace,
+									},
+								},
+							},
+							{
+								S3ProfileName: "minio-on-dr2",
+								S3SecretRef: report.ValidatedS3SecretRef{
+									Validated: report.Validated{
+										State: report.OK,
+									},
+									Value: corev1.SecretReference{
+										Name:      "ramen-s3-secret-dr2",
+										Namespace: testConfig.Namespaces.RamenHubNamespace,
+									},
+								},
+							},
+						},
+					},
+				},
 				Deployment: report.DeploymentSummary{
 					Name:      "ramen-hub-operator",
 					Namespace: testConfig.Namespaces.RamenHubNamespace,
@@ -734,6 +781,52 @@ func TestValidateClustersPassed(t *testing.T) {
 			{
 				Name: "dr1",
 				Ramen: report.RamenSummary{
+					ConfigMap: report.ConfigMapSummary{
+						Name:      ramen.DRClusterOperatorName + "-config",
+						Namespace: testConfig.Namespaces.RamenDRClusterNamespace,
+						Deleted: report.ValidatedBool{
+							Validated: report.Validated{
+								State: report.OK,
+							},
+						},
+						RamenControllerType: report.ValidatedString{
+							Validated: report.Validated{
+								State: report.OK,
+							},
+							Value: string(ramenapi.DRClusterType),
+						},
+						S3StoreProfiles: report.ValidatedS3StoreProfilesList{
+							Validated: report.Validated{
+								State: report.OK,
+							},
+							Value: []report.S3StoreProfilesSummary{
+								{
+									S3ProfileName: "minio-on-dr1",
+									S3SecretRef: report.ValidatedS3SecretRef{
+										Validated: report.Validated{
+											State: report.OK,
+										},
+										Value: corev1.SecretReference{
+											Name:      "ramen-s3-secret-dr1",
+											Namespace: testConfig.Namespaces.RamenHubNamespace,
+										},
+									},
+								},
+								{
+									S3ProfileName: "minio-on-dr2",
+									S3SecretRef: report.ValidatedS3SecretRef{
+										Validated: report.Validated{
+											State: report.OK,
+										},
+										Value: corev1.SecretReference{
+											Name:      "ramen-s3-secret-dr2",
+											Namespace: testConfig.Namespaces.RamenHubNamespace,
+										},
+									},
+								},
+							},
+						},
+					},
 					Deployment: report.DeploymentSummary{
 						Name:      "ramen-dr-cluster-operator",
 						Namespace: testConfig.Namespaces.RamenDRClusterNamespace,
@@ -762,6 +855,52 @@ func TestValidateClustersPassed(t *testing.T) {
 			{
 				Name: "dr2",
 				Ramen: report.RamenSummary{
+					ConfigMap: report.ConfigMapSummary{
+						Name:      ramen.DRClusterOperatorName + "-config",
+						Namespace: testConfig.Namespaces.RamenDRClusterNamespace,
+						Deleted: report.ValidatedBool{
+							Validated: report.Validated{
+								State: report.OK,
+							},
+						},
+						RamenControllerType: report.ValidatedString{
+							Validated: report.Validated{
+								State: report.OK,
+							},
+							Value: string(ramenapi.DRClusterType),
+						},
+						S3StoreProfiles: report.ValidatedS3StoreProfilesList{
+							Validated: report.Validated{
+								State: report.OK,
+							},
+							Value: []report.S3StoreProfilesSummary{
+								{
+									S3ProfileName: "minio-on-dr1",
+									S3SecretRef: report.ValidatedS3SecretRef{
+										Validated: report.Validated{
+											State: report.OK,
+										},
+										Value: corev1.SecretReference{
+											Name:      "ramen-s3-secret-dr1",
+											Namespace: testConfig.Namespaces.RamenHubNamespace,
+										},
+									},
+								},
+								{
+									S3ProfileName: "minio-on-dr2",
+									S3SecretRef: report.ValidatedS3SecretRef{
+										Validated: report.Validated{
+											State: report.OK,
+										},
+										Value: corev1.SecretReference{
+											Name:      "ramen-s3-secret-dr2",
+											Namespace: testConfig.Namespaces.RamenHubNamespace,
+										},
+									},
+								},
+							},
+						},
+					},
 					Deployment: report.DeploymentSummary{
 						Name:      "ramen-dr-cluster-operator",
 						Namespace: testConfig.Namespaces.RamenDRClusterNamespace,
@@ -791,7 +930,7 @@ func TestValidateClustersPassed(t *testing.T) {
 	}
 	checkClusterStatus(t, validate.report, expected)
 
-	checkSummary(t, validate.report, Summary{OK: 19})
+	checkSummary(t, validate.report, Summary{OK: 34})
 }
 
 func TestValidateClustersValidateFailed(t *testing.T) {

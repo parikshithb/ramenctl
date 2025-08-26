@@ -12,6 +12,7 @@ import (
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"sigs.k8s.io/yaml"
 
 	"github.com/ramendr/ramen/e2e/types"
 	"github.com/ramendr/ramenctl/pkg/console"
@@ -258,7 +259,145 @@ func (c *Command) validateRamen(
 		return fmt.Errorf("failed to validate deployment: %w", err)
 	}
 
+	if err := c.validateRamenConfigMap(
+		&s.ConfigMap,
+		cluster,
+		deploymentName+"-config",
+		namespace,
+		controllerType,
+	); err != nil {
+		return fmt.Errorf("failed to validate configmap: %w", err)
+	}
+
 	return nil
+}
+
+func (c *Command) validateRamenConfigMap(
+	s *report.ConfigMapSummary,
+	cluster *types.Cluster,
+	name, namespace string,
+	controllerType ramenapi.ControllerType,
+) error {
+	log := c.Logger()
+	reader := c.outputReader(cluster.Name)
+
+	s.Name = name
+	s.Namespace = namespace
+
+	configMap, err := readConfigMap(reader, name, namespace)
+	if err != nil {
+		if !errors.Is(err, os.ErrNotExist) {
+			return fmt.Errorf("failed to read configmap \"%s/%s\" from cluster %q: %w",
+				namespace, name, cluster.Name, err)
+		}
+
+		log.Debugf("Configmap \"%s/%s\" does not exist in cluster %q",
+			namespace, name, cluster.Name)
+		s.Deleted = c.validatedDeleted(nil)
+		return nil
+	}
+
+	log.Debugf("Read configmap \"%s/%s\" from cluster %q", namespace, name, cluster.Name)
+	s.Deleted = c.validatedDeleted(configMap)
+
+	config := &ramenapi.RamenConfig{}
+	data := []byte(configMap.Data[ramen.ConfigMapRamenConfigKeyName])
+	if err := yaml.Unmarshal(data, config); err != nil {
+		return fmt.Errorf("failed to unmarshal ramen config data: %w\n%s", err, data)
+	}
+
+	s.RamenControllerType = c.validatedRamenControllerType(config, controllerType)
+
+	if err := c.validatedS3Profiles(&s.S3StoreProfiles, cluster, config); err != nil {
+		return fmt.Errorf("failed to validate s3 profiles: %w", err)
+	}
+
+	// TODO: Validate that configmap is identical to the configmap on the hub except the controller
+	// type.
+
+	return nil
+}
+
+func (c *Command) validatedRamenControllerType(
+	config *ramenapi.RamenConfig,
+	expectedType ramenapi.ControllerType,
+) report.ValidatedString {
+	validated := report.ValidatedString{Value: string(config.RamenControllerType)}
+
+	if config.RamenControllerType != expectedType {
+		validated.State = report.Problem
+		validated.Description = fmt.Sprintf("Expecting controller type %q", expectedType)
+	} else {
+		validated.State = report.OK
+	}
+
+	c.report.Summary.Add(&validated)
+	return validated
+}
+
+func (c *Command) validatedS3Profiles(
+	s *report.ValidatedS3StoreProfilesList,
+	cluster *types.Cluster,
+	config *ramenapi.RamenConfig,
+) error {
+	for i := range config.S3StoreProfiles {
+		profile := &config.S3StoreProfiles[i]
+
+		validatedSecret, err := c.validatedSecretRef(profile.S3SecretRef, cluster)
+		if err != nil {
+			return fmt.Errorf("failed to validate s3 profile %q secret: %w",
+				profile.S3ProfileName, err)
+		}
+
+		ps := report.S3StoreProfilesSummary{
+			S3ProfileName: profile.S3ProfileName,
+			S3SecretRef:   validatedSecret,
+		}
+		s.Value = append(s.Value, ps)
+	}
+
+	if len(s.Value) == 0 {
+		s.State = report.Problem
+		s.Description = "No s3 profiles found"
+	} else {
+		s.State = report.OK
+	}
+	c.report.Summary.Add(s)
+
+	return nil
+}
+
+func (c *Command) validatedSecretRef(
+	secretRef corev1.SecretReference,
+	cluster *types.Cluster,
+) (report.ValidatedS3SecretRef, error) {
+	log := c.Logger()
+	reader := c.outputReader(cluster.Name)
+	validated := report.ValidatedS3SecretRef{Value: secretRef}
+
+	_, err := readSecret(reader, secretRef.Name, secretRef.Namespace)
+	if err != nil {
+		if !errors.Is(err, os.ErrNotExist) {
+			err := fmt.Errorf("failed to read secret \"%s/%s\" from cluster %q: %w",
+				secretRef.Namespace, secretRef.Name, cluster.Name, err)
+			return validated, err
+		}
+		log.Debugf("Secret \"%s/%s\" does not exist in cluster %q",
+			secretRef.Namespace, secretRef.Name, cluster.Name)
+		validated.State = report.Problem
+		validated.Description = "Secret does not exist"
+	} else {
+		log.Debugf("Read secret \"%s/%s\" from cluster %q",
+			secretRef.Namespace, secretRef.Name, cluster.Name)
+		// TODO:
+		// - Validate secret identical to hub secret?
+		// - Validate secret required fields?
+		validated.State = report.OK
+	}
+
+	c.report.Summary.Add(&validated)
+
+	return validated, nil
 }
 
 func (c *Command) validateDeployment(
