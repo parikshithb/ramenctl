@@ -593,6 +593,7 @@ func TestValidateClustersPassed(t *testing.T) {
 	validate := testCommand(t, validateClusters, &validation.Mock{})
 	addGatheredData(t, validate, "clusters")
 	if err := validate.Clusters(); err != nil {
+		dumpCommandLog(t, validate)
 		t.Fatal(err)
 	}
 	checkReport(t, validate.report, report.Passed)
@@ -713,6 +714,7 @@ func TestValidateClustersPassed(t *testing.T) {
 func TestValidateClustersValidateFailed(t *testing.T) {
 	validate := testCommand(t, validateClusters, validateConfigFailed)
 	if err := validate.Clusters(); err == nil {
+		dumpCommandLog(t, validate)
 		t.Fatal("command did not fail")
 	}
 	checkReport(t, validate.report, report.Failed)
@@ -730,6 +732,7 @@ func TestValidateClustersValidateFailed(t *testing.T) {
 func TestValidateClustersValidateCanceled(t *testing.T) {
 	validate := testCommand(t, validateClusters, validateConfigCanceled)
 	if err := validate.Clusters(); err == nil {
+		dumpCommandLog(t, validate)
 		t.Fatal("command did not fail")
 	}
 	checkReport(t, validate.report, report.Canceled)
@@ -747,6 +750,7 @@ func TestValidateClustersValidateCanceled(t *testing.T) {
 func TestValidateClusterGatherClusterFailed(t *testing.T) {
 	validate := testCommand(t, validateClusters, gatherClusterFailed)
 	if err := validate.Clusters(); err == nil {
+		dumpCommandLog(t, validate)
 		t.Fatal("command did not fail")
 	}
 	checkReport(t, validate.report, report.Failed)
@@ -776,6 +780,7 @@ func TestValidateApplicationPassed(t *testing.T) {
 	validate := testCommand(t, validateApplication, applicationMock)
 	addGatheredData(t, validate, "appset-deploy-rbd")
 	if err := validate.Application(drpcName, drpcNamespace); err != nil {
+		dumpCommandLog(t, validate)
 		t.Fatal(err)
 	}
 	checkReport(t, validate.report, report.Passed)
@@ -963,6 +968,7 @@ func TestValidateApplicationPassed(t *testing.T) {
 func TestValidateApplicationValidateFailed(t *testing.T) {
 	validate := testCommand(t, validateApplication, validateConfigFailed)
 	if err := validate.Application(drpcName, drpcNamespace); err == nil {
+		dumpCommandLog(t, validate)
 		t.Fatal("command did not fail")
 	}
 	checkReport(t, validate.report, report.Failed)
@@ -979,6 +985,7 @@ func TestValidateApplicationValidateFailed(t *testing.T) {
 func TestValidateApplicationValidateCanceled(t *testing.T) {
 	validate := testCommand(t, validateApplication, validateConfigCanceled)
 	if err := validate.Application(drpcName, drpcNamespace); err == nil {
+		dumpCommandLog(t, validate)
 		t.Fatal("command did not fail")
 	}
 	checkReport(t, validate.report, report.Canceled)
@@ -995,6 +1002,7 @@ func TestValidateApplicationValidateCanceled(t *testing.T) {
 func TestValidateApplicationInspectApplicationFailed(t *testing.T) {
 	validate := testCommand(t, validateApplication, inspectApplicationFailed)
 	if err := validate.Application(drpcName, drpcNamespace); err == nil {
+		dumpCommandLog(t, validate)
 		t.Fatal("command did not fail")
 	}
 	checkReport(t, validate.report, report.Failed)
@@ -1018,6 +1026,7 @@ func TestValidateApplicationInspectApplicationFailed(t *testing.T) {
 func TestValidateApplicationInspectApplicationCanceled(t *testing.T) {
 	validate := testCommand(t, validateApplication, inspectApplicationCanceled)
 	if err := validate.Application(drpcName, drpcNamespace); err == nil {
+		dumpCommandLog(t, validate)
 		t.Fatal("command did not fail")
 	}
 	checkReport(t, validate.report, report.Canceled)
@@ -1041,6 +1050,7 @@ func TestValidateApplicationInspectApplicationCanceled(t *testing.T) {
 func TestValidateApplicationGatherClusterFailed(t *testing.T) {
 	validate := testCommand(t, validateApplication, gatherClusterFailed)
 	if err := validate.Application(drpcName, drpcNamespace); err == nil {
+		dumpCommandLog(t, validate)
 		t.Fatal("command did not fail")
 	}
 	checkReport(t, validate.report, report.Failed)
@@ -1198,4 +1208,13 @@ func totalDuration(steps []*report.Step) float64 {
 		total += step.Duration
 	}
 	return total
+}
+
+func dumpCommandLog(t *testing.T, cmd *Command) {
+	log, err := os.ReadFile(cmd.command.LogFile())
+	if err != nil {
+		t.Logf("Failed to read command log: %s", err)
+		return
+	}
+	t.Logf("Command log:\n%s", log)
 }

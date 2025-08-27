@@ -87,7 +87,7 @@ func ForTest(
 	env *types.Env,
 	outputDir string,
 ) (*Command, error) {
-	log, closeLog, err := newLogger(outputDir, commandName+".log")
+	log, closeLog, err := newLogger(outputDir, logName(commandName))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create logger: %w", err)
 	}
@@ -107,6 +107,10 @@ func (c *Command) Name() string {
 
 func (c *Command) OutputDir() string {
 	return c.outputDir
+}
+
+func (c *Command) LogFile() string {
+	return filepath.Join(c.outputDir, logName(c.name))
 }
 
 func (c *Command) Logger() *zap.SugaredLogger {
@@ -139,4 +143,8 @@ func (c *Command) WriteReport(report any) error {
 	}
 	path := filepath.Join(c.outputDir, c.name+".yaml")
 	return os.WriteFile(path, data, 0o640)
+}
+
+func logName(commandName string) string {
+	return commandName + ".log"
 }
