@@ -87,11 +87,11 @@ func (c *Command) validateGatheredClustersData() bool {
 
 func (c *Command) validateClustersHub(s *report.ClustersStatusHub) error {
 	if err := c.validateClustersDRPolicies(&s.DRPolicies); err != nil {
-		return fmt.Errorf("failed to validate DRPolicies: %w", err)
+		return fmt.Errorf("failed to validate drpolicies: %w", err)
 	}
 
 	if err := c.validateClustersDRClusters(&s.DRClusters); err != nil {
-		return fmt.Errorf("failed to validate DRClusters: %w", err)
+		return fmt.Errorf("failed to validate drclusters: %w", err)
 	}
 
 	return nil
@@ -105,16 +105,16 @@ func (c *Command) validateClustersDRPolicies(
 
 	drPolicyNames, err := ramen.ListDRPolicies(reader)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to list drpolicies: %w", err)
 	}
 
 	for _, policyName := range drPolicyNames {
 		drPolicy, err := ramen.ReadDRPolicy(reader, policyName)
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to read drpolicy %q: %w", policyName, err)
 		}
-		log.Debugf("Read DRPolicy %q", drPolicy.Name)
 
+		log.Debugf("Read drpolicy %q", drPolicy.Name)
 		dps := report.DRPolicySummary{
 			Name:               drPolicy.Name,
 			SchedulingInterval: drPolicy.Spec.SchedulingInterval,
@@ -144,16 +144,16 @@ func (c *Command) validateClustersDRClusters(
 
 	drClusterNames, err := ramen.ListDRClusters(reader)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to list drclusters: %w", err)
 	}
 
 	for _, drClusterName := range drClusterNames {
 		drCluster, err := ramen.ReadDRCluster(reader, drClusterName)
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to read drluster %q: %w", drClusterName, err)
 		}
-		log.Debugf("Read DRCluster %q", drCluster.Name)
 
+		log.Debugf("Read drcluster %q", drCluster.Name)
 		dcs := report.DRClusterSummary{
 			Name:       drCluster.Name,
 			Phase:      string(drCluster.Status.Phase),
