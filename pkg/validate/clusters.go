@@ -4,11 +4,16 @@
 package validate
 
 import (
+	"errors"
 	"fmt"
+	"os"
 
 	ramenapi "github.com/ramendr/ramen/api/v1alpha1"
+	appsv1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
+	"github.com/ramendr/ramen/e2e/types"
 	"github.com/ramendr/ramenctl/pkg/console"
 	"github.com/ramendr/ramenctl/pkg/gathering"
 	"github.com/ramendr/ramenctl/pkg/ramen"
@@ -80,6 +85,14 @@ func (c *Command) validateGatheredClustersData() bool {
 		return false
 	}
 
+	if err := c.validateClustersClusters(&s.Clusters); err != nil {
+		step.Status = report.Failed
+		msg := "Failed to validate managed clusters"
+		console.Error(msg)
+		log.Errorf("%s: %s", msg, err)
+		return false
+	}
+
 	step.Status = report.Passed
 	console.Pass("Clusters validated")
 	return true
@@ -92,6 +105,12 @@ func (c *Command) validateClustersHub(s *report.ClustersStatusHub) error {
 
 	if err := c.validateClustersDRClusters(&s.DRClusters); err != nil {
 		return fmt.Errorf("failed to validate drclusters: %w", err)
+	}
+
+	hub := c.Env().Hub
+	namespace := c.Config().Namespaces.RamenHubNamespace
+	if err := c.validateRamen(&s.Ramen, hub, namespace, ramenapi.DRHubType); err != nil {
+		return fmt.Errorf("failed to validate ramen: %w", err)
 	}
 
 	return nil
@@ -194,5 +213,111 @@ func (c *Command) validatedDRClusterConditions(
 		c.report.Summary.Add(&validated)
 		conditions = append(conditions, validated)
 	}
+
+	return conditions
+}
+
+func (c *Command) validateClustersClusters(s *[]report.ClustersStatusCluster) error {
+	env := c.Env()
+	namespace := c.Config().Namespaces.RamenDRClusterNamespace
+
+	for _, cluster := range []*types.Cluster{env.C1, env.C2} {
+		cs := report.ClustersStatusCluster{Name: cluster.Name}
+		if err := c.validateRamen(&cs.Ramen, cluster, namespace, ramenapi.DRClusterType); err != nil {
+			return fmt.Errorf("failed to validate ramen: %w", err)
+		}
+		*s = append(*s, cs)
+	}
+
+	return nil
+}
+
+func (c *Command) validateRamen(
+	s *report.RamenSummary,
+	cluster *types.Cluster,
+	namespace string,
+	controllerType ramenapi.ControllerType,
+) error {
+	var deploymentName string
+
+	switch controllerType {
+	case ramenapi.DRHubType:
+		deploymentName = ramen.HubOperatorName
+	case ramenapi.DRClusterType:
+		deploymentName = ramen.DRClusterOperatorName
+	default:
+		panic(fmt.Sprintf("Invalid controller type %q", controllerType))
+	}
+
+	if err := c.validateDeployment(
+		&s.Deployment,
+		cluster,
+		deploymentName,
+		namespace,
+	); err != nil {
+		return fmt.Errorf("failed to validate deployment: %w", err)
+	}
+
+	return nil
+}
+
+func (c *Command) validateDeployment(
+	s *report.DeploymentSummary,
+	cluster *types.Cluster,
+	name, namespace string,
+) error {
+	log := c.Logger()
+	reader := c.outputReader(cluster.Name)
+
+	s.Name = name
+	s.Namespace = namespace
+
+	deployment, err := readDeployment(reader, name, namespace)
+	if err != nil {
+		if !errors.Is(err, os.ErrNotExist) {
+			return fmt.Errorf("failed to read deployment \"%s/%s\" from cluster %q: %w",
+				namespace, name, cluster.Name, err)
+		}
+
+		log.Debugf("Deployment \"%s/%s\" does not exist in cluster %q",
+			namespace, name, cluster.Name)
+		s.Deleted = c.validatedDeleted(nil)
+		return nil
+	}
+
+	log.Debugf("Read deployment \"%s/%s\" from cluster %q", namespace, name, cluster.Name)
+	s.Deleted = c.validatedDeleted(deployment)
+	s.Conditions = c.validatedDeploymentConditions(deployment)
+
+	return nil
+}
+
+func (c *Command) validatedDeploymentConditions(
+	deployment *appsv1.Deployment,
+) []report.ValidatedCondition {
+	log := c.Logger()
+	var conditions []report.ValidatedCondition
+
+	for i := range deployment.Status.Conditions {
+		condition := &deployment.Status.Conditions[i]
+
+		var expectedStatus corev1.ConditionStatus
+		switch condition.Type {
+		case appsv1.DeploymentAvailable, appsv1.DeploymentProgressing:
+			expectedStatus = corev1.ConditionTrue
+		case appsv1.DeploymentReplicaFailure:
+			expectedStatus = corev1.ConditionFalse
+		default:
+			// Possible if new deployemnt condition is added. We don't have a way to fail during
+			// compile time if a new type is introduced.
+			log.Warnf("Expecting True status for unexpected deployment condition: %+v", condition)
+			expectedStatus = corev1.ConditionTrue
+		}
+
+		validated := validatedDeploymentCondition(condition, expectedStatus)
+		c.report.Summary.Add(&validated)
+		conditions = append(conditions, validated)
+	}
+
 	return conditions
 }

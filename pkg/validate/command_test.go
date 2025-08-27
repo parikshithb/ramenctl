@@ -704,11 +704,94 @@ func TestValidateClustersPassed(t *testing.T) {
 					},
 				},
 			},
+			Ramen: report.RamenSummary{
+				Deployment: report.DeploymentSummary{
+					Name:      "ramen-hub-operator",
+					Namespace: testConfig.Namespaces.RamenHubNamespace,
+					Deleted: report.ValidatedBool{
+						Validated: report.Validated{
+							State: report.OK,
+						},
+					},
+					Conditions: []report.ValidatedCondition{
+						{
+							Validated: report.Validated{
+								State: report.OK,
+							},
+							Type: "Available",
+						},
+						{
+							Validated: report.Validated{
+								State: report.OK,
+							},
+							Type: "Progressing",
+						},
+					},
+				},
+			},
+		},
+		Clusters: []report.ClustersStatusCluster{
+			{
+				Name: "dr1",
+				Ramen: report.RamenSummary{
+					Deployment: report.DeploymentSummary{
+						Name:      "ramen-dr-cluster-operator",
+						Namespace: testConfig.Namespaces.RamenDRClusterNamespace,
+						Deleted: report.ValidatedBool{
+							Validated: report.Validated{
+								State: report.OK,
+							},
+						},
+						Conditions: []report.ValidatedCondition{
+							{
+								Validated: report.Validated{
+									State: report.OK,
+								},
+								Type: "Available",
+							},
+							{
+								Validated: report.Validated{
+									State: report.OK,
+								},
+								Type: "Progressing",
+							},
+						},
+					},
+				},
+			},
+			{
+				Name: "dr2",
+				Ramen: report.RamenSummary{
+					Deployment: report.DeploymentSummary{
+						Name:      "ramen-dr-cluster-operator",
+						Namespace: testConfig.Namespaces.RamenDRClusterNamespace,
+						Deleted: report.ValidatedBool{
+							Validated: report.Validated{
+								State: report.OK,
+							},
+						},
+						Conditions: []report.ValidatedCondition{
+							{
+								Validated: report.Validated{
+									State: report.OK,
+								},
+								Type: "Available",
+							},
+							{
+								Validated: report.Validated{
+									State: report.OK,
+								},
+								Type: "Progressing",
+							},
+						},
+					},
+				},
+			},
 		},
 	}
 	checkClusterStatus(t, validate.report, expected)
 
-	checkSummary(t, validate.report, Summary{OK: 10})
+	checkSummary(t, validate.report, Summary{OK: 19})
 }
 
 func TestValidateClustersValidateFailed(t *testing.T) {
