@@ -164,7 +164,7 @@ func (c *Command) validateClustersDRClusters(
 
 	if len(drClustersList.Value) < 2 {
 		drClustersList.State = report.Problem
-		drClustersList.Description = fmt.Sprintf("2 DRClusters required %d found",
+		drClustersList.Description = fmt.Sprintf("2 DRClusters required, %d found",
 			len(drClustersList.Value))
 	} else {
 		drClustersList.State = report.OK
