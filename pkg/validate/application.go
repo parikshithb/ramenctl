@@ -114,22 +114,25 @@ func (c *Command) validateGatheredApplicationData(drpcName, drpcNamespace string
 	drpc, err := c.validateApplicationHub(&s.Hub, drpcName, drpcNamespace)
 	if err != nil {
 		step.Status = report.Failed
-		console.Error("Failed to validate hub")
-		log.Error(err)
+		msg := "Failed to validate hub"
+		console.Error(msg)
+		log.Errorf("%s: %s", msg, err)
 		return false
 	}
 
 	if err := c.validateApplicationPrimaryCluster(&s.PrimaryCluster, drpc); err != nil {
 		step.Status = report.Failed
-		console.Error("Failed to validate primary cluster")
-		log.Error(err)
+		msg := "Failed to validate primary cluster"
+		console.Error(msg)
+		log.Errorf("%s: %s", msg, err)
 		return false
 	}
 
 	if err := c.validateApplicationSecondaryCluster(&s.SecondaryCluster, drpc); err != nil {
 		step.Status = report.Failed
-		console.Error("Failed to validate secondary cluster")
-		log.Error(err)
+		msg := "Failed to validate secondary cluster"
+		console.Error(msg)
+		log.Errorf("%s: %s", msg, err)
 		return false
 	}
 
