@@ -94,6 +94,14 @@ func (c *Command) validateGatheredClustersData() bool {
 		return false
 	}
 
+	if c.report.Summary.HasIssues() {
+		step.Status = report.Failed
+		msg := "Issues found during validation"
+		console.Error(msg)
+		log.Errorf("%s: %s", msg, c.report.Summary)
+		return false
+	}
+
 	step.Status = report.Passed
 	console.Pass("Clusters validated")
 	return true
