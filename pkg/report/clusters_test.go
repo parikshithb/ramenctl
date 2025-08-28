@@ -193,6 +193,17 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 		}
 		checkClustersNotEqual(t, c1, c2)
 	})
+	t.Run("hub ramen deployment replicas", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Hub.Ramen.Deployment.Replicas = report.ValidatedInteger{
+			Validated: report.Validated{
+				State:       report.Problem,
+				Description: "Expecting 1 replica",
+			},
+			Value: 0,
+		}
+		checkClustersNotEqual(t, c1, c2)
+	})
 	t.Run("hub ramen deployment conditions", func(t *testing.T) {
 		c2 := testClusterStatus()
 		c2.Hub.Ramen.Deployment.Conditions[0].State = report.Problem
@@ -269,6 +280,17 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 	t.Run("cluster ramen deployment namespace", func(t *testing.T) {
 		c2 := testClusterStatus()
 		c2.Clusters[0].Ramen.Deployment.Namespace = modified
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("cluster ramen deployment replicas", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Clusters[0].Ramen.Deployment.Replicas = report.ValidatedInteger{
+			Validated: report.Validated{
+				State:       report.Problem,
+				Description: "Expecting 1 replica",
+			},
+			Value: 2,
+		}
 		checkClustersNotEqual(t, c1, c2)
 	})
 	t.Run("cluster ramen deployment conditions", func(t *testing.T) {
@@ -439,6 +461,12 @@ func testClusterStatus() *report.ClustersStatus {
 							State: report.OK,
 						},
 					},
+					Replicas: report.ValidatedInteger{
+						Validated: report.Validated{
+							State: report.OK,
+						},
+						Value: 1,
+					},
 					Conditions: []report.ValidatedCondition{
 						{
 							Validated: report.Validated{
@@ -514,6 +542,12 @@ func testClusterStatus() *report.ClustersStatus {
 								State: report.OK,
 							},
 						},
+						Replicas: report.ValidatedInteger{
+							Validated: report.Validated{
+								State: report.OK,
+							},
+							Value: 1,
+						},
 						Conditions: []report.ValidatedCondition{
 							{
 								Validated: report.Validated{
@@ -587,6 +621,12 @@ func testClusterStatus() *report.ClustersStatus {
 							Validated: report.Validated{
 								State: report.OK,
 							},
+						},
+						Replicas: report.ValidatedInteger{
+							Validated: report.Validated{
+								State: report.OK,
+							},
+							Value: 1,
 						},
 						Conditions: []report.ValidatedCondition{
 							{

@@ -42,6 +42,7 @@ type DeploymentSummary struct {
 	Name       string               `json:"name"`
 	Namespace  string               `json:"namespace"`
 	Deleted    ValidatedBool        `json:"deleted"`
+	Replicas   ValidatedInteger     `json:"replicas"`
 	Conditions []ValidatedCondition `json:"conditions,omitempty"`
 }
 
@@ -239,6 +240,9 @@ func (d *DeploymentSummary) Equal(o *DeploymentSummary) bool {
 		return false
 	}
 	if d.Deleted != o.Deleted {
+		return false
+	}
+	if d.Replicas != o.Replicas {
 		return false
 	}
 	if !slices.Equal(d.Conditions, o.Conditions) {

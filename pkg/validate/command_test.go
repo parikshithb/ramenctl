@@ -760,6 +760,12 @@ func TestValidateClustersPassed(t *testing.T) {
 							State: report.OK,
 						},
 					},
+					Replicas: report.ValidatedInteger{
+						Validated: report.Validated{
+							State: report.OK,
+						},
+						Value: 1,
+					},
 					Conditions: []report.ValidatedCondition{
 						{
 							Validated: report.Validated{
@@ -835,6 +841,12 @@ func TestValidateClustersPassed(t *testing.T) {
 								State: report.OK,
 							},
 						},
+						Replicas: report.ValidatedInteger{
+							Validated: report.Validated{
+								State: report.OK,
+							},
+							Value: 1,
+						},
 						Conditions: []report.ValidatedCondition{
 							{
 								Validated: report.Validated{
@@ -909,6 +921,12 @@ func TestValidateClustersPassed(t *testing.T) {
 								State: report.OK,
 							},
 						},
+						Replicas: report.ValidatedInteger{
+							Validated: report.Validated{
+								State: report.OK,
+							},
+							Value: 1,
+						},
 						Conditions: []report.ValidatedCondition{
 							{
 								Validated: report.Validated{
@@ -930,7 +948,7 @@ func TestValidateClustersPassed(t *testing.T) {
 	}
 	checkClusterStatus(t, validate.report, expected)
 
-	checkSummary(t, validate.report, Summary{OK: 34})
+	checkSummary(t, validate.report, Summary{OK: 37})
 }
 
 func TestValidateClustersValidateFailed(t *testing.T) {

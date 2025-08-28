@@ -14,6 +14,10 @@ import (
 
 const (
 	deploymentPlural = "deployments"
+
+	// defaultReplicas is the number of pods if Spec.Replicas is not set.
+	// https://github.com/kubernetes/api/blob/a2bc45aa612abd8a604e74a16a660415743d99ba/apps/v1/types.go#L378
+	defaultReplicas = 1
 )
 
 func readDeployment(

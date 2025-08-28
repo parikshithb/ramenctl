@@ -47,6 +47,10 @@ const (
 	// https://github.com/RamenDR/ramen/blob/ac64bd0bb67bcb194b938d52dc86bd165807987e/internal/controller/ramenconfig.go#L35
 	ConfigMapRamenConfigKeyName = "ramen_manager_config.yaml"
 
+	// OperatorReplicas is the number of pods in the ramen operator deployment.
+	// TODO: discover the value from the cluster.
+	OperatorReplicas = 1
+
 	// TODO: find a way to get this from ramen api. Available in the CRD under spec/names/plural.
 	// Should we gather the CRDs from the cluster?
 	drpcPlural      = "drplacementcontrols"

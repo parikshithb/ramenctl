@@ -263,6 +263,7 @@ func (c *Command) validateRamen(
 		cluster,
 		deploymentName,
 		namespace,
+		ramen.OperatorReplicas,
 	); err != nil {
 		return fmt.Errorf("failed to validate deployment: %w", err)
 	}
@@ -412,6 +413,7 @@ func (c *Command) validateDeployment(
 	s *report.DeploymentSummary,
 	cluster *types.Cluster,
 	name, namespace string,
+	expectedReplicas int32,
 ) error {
 	log := c.Logger()
 	reader := c.outputReader(cluster.Name)
@@ -434,9 +436,31 @@ func (c *Command) validateDeployment(
 
 	log.Debugf("Read deployment \"%s/%s\" from cluster %q", namespace, name, cluster.Name)
 	s.Deleted = c.validatedDeleted(deployment)
+	s.Replicas = c.validatedDeploymentReplicas(deployment, expectedReplicas)
 	s.Conditions = c.validatedDeploymentConditions(deployment)
 
 	return nil
+}
+
+func (c *Command) validatedDeploymentReplicas(
+	deployment *appsv1.Deployment,
+	expectedReplicas int32,
+) report.ValidatedInteger {
+	validated := report.ValidatedInteger{Value: defaultReplicas}
+
+	if deployment.Spec.Replicas != nil {
+		validated.Value = int64(*deployment.Spec.Replicas)
+	}
+
+	if validated.Value != int64(expectedReplicas) {
+		validated.State = report.Problem
+		validated.Description = fmt.Sprintf("Expecting %d replicas", expectedReplicas)
+	} else {
+		validated.State = report.OK
+	}
+
+	c.report.Summary.Add(&validated)
+	return validated
 }
 
 func (c *Command) validatedDeploymentConditions(

@@ -45,6 +45,12 @@ type ValidatedBool struct {
 	Value bool `json:"value,omitempty"`
 }
 
+// ValidatedInteger is a validated object integer property.
+type ValidatedInteger struct {
+	Validated
+	Value int64 `json:"value"`
+}
+
 // ValidatedCondition is a validated condition.
 type ValidatedCondition struct {
 	Validated
