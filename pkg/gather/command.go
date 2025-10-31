@@ -123,6 +123,10 @@ func (c *Command) gatherData(drpcName string, drpcNamespace string) bool {
 		return c.finishStep()
 	}
 
+	if !c.gatherApplicationS3Data(drpcName, drpcNamespace, options.OutputDir) {
+		return c.finishStep()
+	}
+
 	c.finishStep()
 	return true
 }
@@ -184,6 +188,31 @@ func (c *Command) gatherApplication(options gathering.Options) bool {
 	c.Logger().Infof("Gathered clusters in %.2f seconds", time.Since(start).Seconds())
 
 	return c.current.Status == report.Passed
+}
+
+func (c *Command) gatherApplicationS3Data(drpcName, drpcNamespace, outputDir string) bool {
+	start := time.Now()
+	step := &report.Step{Name: "gather application S3 data"}
+
+	c.Logger().Infof("Gathering application S3 data")
+
+	if err := c.backend.GatherS3(c, drpcName, drpcNamespace, outputDir); err != nil {
+		step.Duration = time.Since(start).Seconds()
+		step.Status = report.Failed
+		c.current.AddStep(step)
+		console.Error("Failed to gather S3 data from object stores")
+		c.Logger().Errorf("Failed to gather S3 data: %s", err)
+		return false
+	}
+
+	step.Duration = time.Since(start).Seconds()
+	step.Status = report.Passed
+	c.current.AddStep(step)
+
+	console.Pass("Gathered application S3 data")
+	c.Logger().Infof("Gathered application S3 data in %.2f seconds", step.Duration)
+
+	return true
 }
 
 // withTimeout returns a derived command with a deadline. Call cancel to release resources

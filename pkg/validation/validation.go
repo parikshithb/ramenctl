@@ -30,4 +30,8 @@ type Validation interface {
 		clusters []*types.Cluster,
 		options gathering.Options,
 	) <-chan gathering.Result
+	GatherS3(
+		ctx Context,
+		drpcName, drpcNamespace, outputDir string,
+	) error
 }
