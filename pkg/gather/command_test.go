@@ -112,6 +112,7 @@ func TestGatherApplicationPassed(t *testing.T) {
 		{Name: "gather \"hub\"", Status: report.Passed},
 		{Name: "gather \"c1\"", Status: report.Passed},
 		{Name: "gather \"c2\"", Status: report.Passed},
+		{Name: "gather application S3 data", Status: report.Passed},
 	}
 	checkItems(t, cmd.report.Steps[1], items)
 }
