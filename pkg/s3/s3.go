@@ -4,12 +4,15 @@
 package s3
 
 import (
+	"bufio"
 	"bytes"
+	"compress/gzip"
 	"context"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -184,21 +187,55 @@ func (s *objectStore) listObjects(ctx context.Context, prefix string) ([]string,
 	return keys, nil
 }
 
-// downloadObject downloads an object from S3 store.
-func (s *objectStore) downloadObject(ctx context.Context, key, profileDir string) error {
+// downloadObject downloads and decompress an object from S3 store.
+func (c *objectStore) downloadObject(ctx context.Context, key string, profileDir string) error {
 	start := time.Now()
 
-	result, err := s.client.GetObject(ctx, &s3.GetObjectInput{
-		Bucket: aws.String(s.profile.Bucket),
+	result, err := c.client.GetObject(ctx, &s3.GetObjectInput{
+		Bucket: aws.String(c.profile.Bucket),
 		Key:    aws.String(key),
 	})
 	if err != nil {
 		return fmt.Errorf("failed to get object %q from bucket %q: %w",
-			key, s.profile.Bucket, err)
+			key, c.profile.Bucket, err)
 	}
 	defer result.Body.Close()
 
-	objectPath := filepath.Join(profileDir, key)
+	// Log ContentEncoding for debugging.
+	contentEncoding := ""
+	if result.ContentEncoding != nil {
+		contentEncoding = *result.ContentEncoding
+	}
+	c.log.Debugf("Object %q ContentEncoding: %q", key, contentEncoding)
+
+	// Check Content-Encoding header first
+	isGzippedByHeader := result.ContentEncoding != nil && *result.ContentEncoding == "gzip"
+
+	// If not indicated by header, peek at first 2 bytes to check for gzip magic number.
+	var reader io.Reader = result.Body
+	var isGzipped bool
+
+	if isGzippedByHeader {
+		isGzipped = true
+	} else {
+		// Peek at first 2 bytes to detect gzip magic number (0x1f 0x8b).
+		peekReader := bufio.NewReader(result.Body)
+		magicBytes, err := peekReader.Peek(2)
+		if err != nil && err != io.EOF {
+			return fmt.Errorf("failed to peek object %q: %w", key, err)
+		}
+
+		isGzipped = len(magicBytes) >= 2 && magicBytes[0] == 0x1f && magicBytes[1] == 0x8b
+		reader = peekReader
+	}
+
+	// Remove .gz extension if present.
+	outputKey := key
+	if strings.HasSuffix(key, ".gz") {
+		outputKey = strings.TrimSuffix(key, ".gz")
+	}
+
+	objectPath := filepath.Join(profileDir, outputKey)
 	if err := os.MkdirAll(filepath.Dir(objectPath), dirPerm); err != nil {
 		return err
 	}
@@ -209,18 +246,33 @@ func (s *objectStore) downloadObject(ctx context.Context, key, profileDir string
 	}
 	defer file.Close()
 
-	if _, err := io.Copy(file, result.Body); err != nil {
+	// Decompress if gzipped.
+	if isGzipped {
+		gzipReader, err := gzip.NewReader(reader)
+		if err != nil {
+			return fmt.Errorf("failed to create gzip reader for object %q: %w", key, err)
+		}
+		defer gzipReader.Close()
+		reader = gzipReader
+	}
+
+	if _, err := io.Copy(file, reader); err != nil {
 		return fmt.Errorf("failed to write object %q to file %q: %w",
 			key, objectPath, err)
 	}
 
-	// Close the file explicitly after copy.
+	// Close explicitly after copy.
 	if err := file.Close(); err != nil {
 		return fmt.Errorf("failed to close file %q: %w", objectPath, err)
 	}
 
-	s.log.Debugf("Downloaded object %q in %.3f seconds",
-		key, time.Since(start).Seconds())
+	if isGzipped {
+		c.log.Debugf("Downloaded and decompressed object %q in %.3f seconds",
+			key, time.Since(start).Seconds())
+	} else {
+		c.log.Debugf("Downloaded object %q in %.3f seconds",
+			key, time.Since(start).Seconds())
+	}
 
 	return nil
 }
