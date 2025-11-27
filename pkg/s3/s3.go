@@ -5,11 +5,13 @@ package s3
 
 import (
 	"bytes"
+	"compress/gzip"
 	"context"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -226,8 +228,8 @@ func (s *objectStore) listObjects(ctx context.Context, prefix string) ([]string,
 	return keys, nil
 }
 
-// downloadObject downloads an object from S3 store.
-func (s *objectStore) downloadObject(ctx context.Context, key, profileDir string) error {
+// downloadObject downloads and decompresses an object from S3 store.
+func (s *objectStore) downloadObject(ctx context.Context, key string, profileDir string) error {
 	start := time.Now()
 
 	result, err := s.client.GetObject(ctx, &s3.GetObjectInput{
@@ -240,7 +242,32 @@ func (s *objectStore) downloadObject(ctx context.Context, key, profileDir string
 	}
 	defer result.Body.Close()
 
-	filePath := filepath.Join(profileDir, key)
+	// Peek at the first 2 bytes to detect gzip
+	head := []byte{0, 0}
+	n, err := result.Body.Read(head)
+	if err != nil && err != io.EOF {
+		return fmt.Errorf("failed to read object %q: %w", key, err)
+	}
+
+	// Create a reader including the read bytes
+	reader := io.MultiReader(bytes.NewReader(head[:n]), result.Body)
+
+	// Wrap with gzip reader if we got gzip compressed data
+	encoding := "none"
+	gzipHeader := []byte{0x1f, 0x8b}
+	if bytes.Equal(head, gzipHeader) {
+		encoding = "gzip"
+		gzipReader, err := gzip.NewReader(reader)
+		if err != nil {
+			return fmt.Errorf("failed to create gzip reader for object %q: %w", key, err)
+		}
+		defer gzipReader.Close()
+		reader = gzipReader
+	}
+
+	fileName := strings.TrimSuffix(key, ".gz")
+	filePath := filepath.Join(profileDir, fileName)
+
 	if err := os.MkdirAll(filepath.Dir(filePath), dirPerm); err != nil {
 		return err
 	}
@@ -251,7 +278,7 @@ func (s *objectStore) downloadObject(ctx context.Context, key, profileDir string
 	}
 	defer file.Close()
 
-	if _, err := io.Copy(file, result.Body); err != nil {
+	if _, err := io.Copy(file, reader); err != nil {
 		return fmt.Errorf("failed to write object %q to file %q: %w",
 			key, filePath, err)
 	}
@@ -261,8 +288,8 @@ func (s *objectStore) downloadObject(ctx context.Context, key, profileDir string
 		return fmt.Errorf("failed to close file %q: %w", filePath, err)
 	}
 
-	s.log.Debugf("Downloaded object %q in %.3f seconds",
-		key, time.Since(start).Seconds())
+	s.log.Debugf("Downloaded object %q (encoding: %s) in %.3f seconds",
+		key, encoding, time.Since(start).Seconds())
 
 	return nil
 }
