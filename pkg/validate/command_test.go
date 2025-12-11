@@ -1457,6 +1457,9 @@ func TestValidateApplicationPassed(t *testing.T) {
 		{Name: "gather \"hub\"", Status: report.Passed},
 		{Name: "gather \"dr1\"", Status: report.Passed},
 		{Name: "gather \"dr2\"", Status: report.Passed},
+		{Name: "inspect S3 profiles", Status: report.Passed},
+		{Name: "gather S3 profile \"minio-on-dr1\"", Status: report.Passed},
+		{Name: "gather S3 profile \"minio-on-dr2\"", Status: report.Passed},
 		{Name: "validate data", Status: report.Passed},
 	}
 	checkItems(t, validate.report.Steps[1], items)
@@ -1620,10 +1623,30 @@ func TestValidateApplicationPassed(t *testing.T) {
 				},
 			},
 		},
+		S3: report.S3Status{
+			Profiles: []report.S3ProfileStatus{
+				{
+					Name: "minio-on-dr1",
+					Status: report.ValidatedString{
+						Validated: report.Validated{
+							State: report.OK,
+						},
+					},
+				},
+				{
+					Name: "minio-on-dr2",
+					Status: report.ValidatedString{
+						Validated: report.Validated{
+							State: report.OK,
+						},
+					},
+				},
+			},
+		},
 	}
 	checkApplicationStatus(t, validate.report, expectedStatus)
 
-	checkSummary(t, validate.report, Summary{OK: 21})
+	checkSummary(t, validate.report, Summary{OK: 23})
 }
 
 func TestValidateApplicationValidateFailed(t *testing.T) {
