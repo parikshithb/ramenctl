@@ -45,7 +45,7 @@ metadata:
     operation: Update
     subresource: status
     time: "2025-09-02T15:11:24Z"
-  name: prsurve-s2-c2
+  name: c2
   ownerReferences:
   - apiVersion: multicluster.odf.openshift.io/v1alpha1
     blockOwnerDeletion: true
@@ -56,7 +56,7 @@ metadata:
   resourceVersion: "206530"
   uid: e42a0c88-1122-4704-b58a-b0a36f3c3f60
 spec:
-  s3ProfileName: s3profile-prsurve-s2-c2-ocs-storagecluster
+  s3ProfileName: s3profile-c2-ocs-storagecluster
 status:
   conditions:
   - lastTransitionTime: "2025-09-02T15:10:41Z"
