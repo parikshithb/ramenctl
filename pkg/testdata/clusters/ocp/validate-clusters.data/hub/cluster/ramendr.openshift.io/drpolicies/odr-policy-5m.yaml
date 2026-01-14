@@ -55,8 +55,8 @@ metadata:
   uid: 06ce9006-9ae4-482e-814b-dc204b1d8e28
 spec:
   drClusters:
-  - prsurve-s2-c1
-  - prsurve-s2-c2
+  - c1
+  - c2
   replicationClassSelector: {}
   schedulingInterval: 5m
   volumeGroupSnapshotClassSelector: {}

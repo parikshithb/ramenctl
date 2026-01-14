@@ -74,8 +74,8 @@ var (
 		},
 		env: &types.Env{
 			Hub: &types.Cluster{Name: "hub"},
-			C1:  &types.Cluster{Name: "prsurve-s2-c1"},
-			C2:  &types.Cluster{Name: "prsurve-s2-c2"},
+			C1:  &types.Cluster{Name: "c1"},
+			C2:  &types.Cluster{Name: "c2"},
 		},
 		validateClustersNamespaces: sets.Sorted([]string{
 			e2econfig.OcpNamespaces.RamenHubNamespace,
@@ -1121,15 +1121,15 @@ func TestValidateClustersOcp(t *testing.T) {
 
 	items := []*report.Step{
 		{Name: "gather \"hub\"", Status: report.Passed},
-		{Name: "gather \"prsurve-s2-c1\"", Status: report.Passed},
-		{Name: "gather \"prsurve-s2-c2\"", Status: report.Passed},
+		{Name: "gather \"c1\"", Status: report.Passed},
+		{Name: "gather \"c2\"", Status: report.Passed},
 		{Name: "inspect S3 profiles", Status: report.Passed},
 		{
-			Name:   "check S3 profile \"s3profile-prsurve-s2-c1-ocs-storagecluster\"",
+			Name:   "check S3 profile \"s3profile-c1-ocs-storagecluster\"",
 			Status: report.Passed,
 		},
 		{
-			Name:   "check S3 profile \"s3profile-prsurve-s2-c2-ocs-storagecluster\"",
+			Name:   "check S3 profile \"s3profile-c2-ocs-storagecluster\"",
 			Status: report.Passed,
 		},
 		{Name: "validate clusters data", Status: report.Passed},
@@ -1145,7 +1145,7 @@ func TestValidateClustersOcp(t *testing.T) {
 				},
 				Value: []report.DRClusterSummary{
 					{
-						Name:  "prsurve-s2-c1",
+						Name:  "c1",
 						Phase: "Available",
 						Conditions: []report.ValidatedCondition{
 							{
@@ -1169,7 +1169,7 @@ func TestValidateClustersOcp(t *testing.T) {
 						},
 					},
 					{
-						Name:  "prsurve-s2-c2",
+						Name:  "c2",
 						Phase: "Available",
 						Conditions: []report.ValidatedCondition{
 							{
@@ -1201,7 +1201,7 @@ func TestValidateClustersOcp(t *testing.T) {
 				Value: []report.DRPolicySummary{
 					{
 						Name:               "odr-policy-5m",
-						DRClusters:         []string{"prsurve-s2-c1", "prsurve-s2-c2"},
+						DRClusters:         []string{"c1", "c2"},
 						SchedulingInterval: "5m",
 						PeerClasses: report.ValidatedPeerClassesList{
 							Validated: report.Validated{
@@ -1256,7 +1256,7 @@ func TestValidateClustersOcp(t *testing.T) {
 						},
 						Value: []report.S3StoreProfilesSummary{
 							{
-								S3ProfileName: "s3profile-prsurve-s2-c1-ocs-storagecluster",
+								S3ProfileName: "s3profile-c1-ocs-storagecluster",
 								S3SecretRef: report.ValidatedS3SecretRef{
 									Validated: report.Validated{
 										State: report.OK,
@@ -1267,7 +1267,7 @@ func TestValidateClustersOcp(t *testing.T) {
 								},
 							},
 							{
-								S3ProfileName: "s3profile-prsurve-s2-c2-ocs-storagecluster",
+								S3ProfileName: "s3profile-c2-ocs-storagecluster",
 								S3SecretRef: report.ValidatedS3SecretRef{
 									Validated: report.Validated{
 										State: report.OK,
@@ -1313,7 +1313,7 @@ func TestValidateClustersOcp(t *testing.T) {
 		},
 		Clusters: []report.ClustersStatusCluster{
 			{
-				Name: "prsurve-s2-c1",
+				Name: "c1",
 				Ramen: report.RamenSummary{
 					ConfigMap: report.ConfigMapSummary{
 						Name:      ramen.DrClusterOperatorConfigMapName,
@@ -1335,7 +1335,7 @@ func TestValidateClustersOcp(t *testing.T) {
 							},
 							Value: []report.S3StoreProfilesSummary{
 								{
-									S3ProfileName: "s3profile-prsurve-s2-c1-ocs-storagecluster",
+									S3ProfileName: "s3profile-c1-ocs-storagecluster",
 									S3SecretRef: report.ValidatedS3SecretRef{
 										Validated: report.Validated{
 											State: report.OK,
@@ -1346,7 +1346,7 @@ func TestValidateClustersOcp(t *testing.T) {
 									},
 								},
 								{
-									S3ProfileName: "s3profile-prsurve-s2-c2-ocs-storagecluster",
+									S3ProfileName: "s3profile-c2-ocs-storagecluster",
 									S3SecretRef: report.ValidatedS3SecretRef{
 										Validated: report.Validated{
 											State: report.OK,
@@ -1391,7 +1391,7 @@ func TestValidateClustersOcp(t *testing.T) {
 				},
 			},
 			{
-				Name: "prsurve-s2-c2",
+				Name: "c2",
 				Ramen: report.RamenSummary{
 					ConfigMap: report.ConfigMapSummary{
 						Name:      ramen.DrClusterOperatorConfigMapName,
@@ -1413,7 +1413,7 @@ func TestValidateClustersOcp(t *testing.T) {
 							},
 							Value: []report.S3StoreProfilesSummary{
 								{
-									S3ProfileName: "s3profile-prsurve-s2-c1-ocs-storagecluster",
+									S3ProfileName: "s3profile-c1-ocs-storagecluster",
 									S3SecretRef: report.ValidatedS3SecretRef{
 										Validated: report.Validated{
 											State: report.OK,
@@ -1424,7 +1424,7 @@ func TestValidateClustersOcp(t *testing.T) {
 									},
 								},
 								{
-									S3ProfileName: "s3profile-prsurve-s2-c2-ocs-storagecluster",
+									S3ProfileName: "s3profile-c2-ocs-storagecluster",
 									S3SecretRef: report.ValidatedS3SecretRef{
 										Validated: report.Validated{
 											State: report.OK,
@@ -1476,7 +1476,7 @@ func TestValidateClustersOcp(t *testing.T) {
 				},
 				Value: []report.ClustersS3ProfileStatus{
 					{
-						Name: "s3profile-prsurve-s2-c1-ocs-storagecluster",
+						Name: "s3profile-c1-ocs-storagecluster",
 						Accessible: report.ValidatedBool{
 							Validated: report.Validated{
 								State: report.OK,
@@ -1485,7 +1485,7 @@ func TestValidateClustersOcp(t *testing.T) {
 						},
 					},
 					{
-						Name: "s3profile-prsurve-s2-c2-ocs-storagecluster",
+						Name: "s3profile-c2-ocs-storagecluster",
 						Accessible: report.ValidatedBool{
 							Validated: report.Validated{
 								State: report.OK,
