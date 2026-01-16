@@ -446,9 +446,11 @@ func (c *Command) validatedHubS3Profiles(
 		}
 
 		ps := report.S3StoreProfilesSummary{
-			S3ProfileName: profile.S3ProfileName,
-			S3Bucket:      c.validatedRequiredString(profile.S3Bucket),
-			S3SecretRef:   validatedSecret,
+			S3ProfileName:        profile.S3ProfileName,
+			S3Bucket:             c.validatedRequiredString(profile.S3Bucket),
+			S3CompatibleEndpoint: c.validatedRequiredString(profile.S3CompatibleEndpoint),
+			S3Region:             c.validatedRequiredString(profile.S3Region),
+			S3SecretRef:          validatedSecret,
 		}
 		s.Value = append(s.Value, ps)
 	}
@@ -488,6 +490,16 @@ func (c *Command) validatedManagedClusterS3Profiles(
 			S3Bucket: c.validatedManagedClusterRequiredString(
 				profile.S3Bucket,
 				hubS3Profile.S3Bucket,
+				found,
+			),
+			S3CompatibleEndpoint: c.validatedManagedClusterRequiredString(
+				profile.S3CompatibleEndpoint,
+				hubS3Profile.S3CompatibleEndpoint,
+				found,
+			),
+			S3Region: c.validatedManagedClusterRequiredString(
+				profile.S3Region,
+				hubS3Profile.S3Region,
 				found,
 			),
 			S3SecretRef: validatedSecret,

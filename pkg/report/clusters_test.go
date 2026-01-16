@@ -180,6 +180,26 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].S3Bucket.Value = helpers.Modified
 		checkClustersNotEqual(t, c1, c2)
 	})
+	t.Run("hub ramen configmap s3storeprofiles s3CompatibleEndpoint state", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].S3CompatibleEndpoint.State = report.Problem
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("hub ramen configmap s3storeprofiles s3CompatibleEndpoint value", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].S3CompatibleEndpoint.Value = helpers.Modified
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("hub ramen configmap s3storeprofiles s3Region state", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].S3Region.State = report.Problem
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("hub ramen configmap s3storeprofiles s3Region value", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].S3Region.Value = helpers.Modified
+		checkClustersNotEqual(t, c1, c2)
+	})
 	t.Run("hub ramen configmap s3storeprofiles secretref state", func(t *testing.T) {
 		c2 := testClusterStatus()
 		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.State = report.Problem
@@ -296,6 +316,26 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 	t.Run("cluster ramen configmap s3storeprofiles s3bucket value", func(t *testing.T) {
 		c2 := testClusterStatus()
 		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].S3Bucket.Value = helpers.Modified
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("cluster ramen configmap s3storeprofiles s3CompatibleEndpoint state", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].S3CompatibleEndpoint.State = report.Problem
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("cluster ramen configmap s3storeprofiles s3CompatibleEndpoint value", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].S3CompatibleEndpoint.Value = helpers.Modified
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("cluster ramen configmap s3storeprofiles s3Region state", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].S3Region.State = report.Problem
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("cluster ramen configmap s3storeprofiles s3Region value", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].S3Region.Value = helpers.Modified
 		checkClustersNotEqual(t, c1, c2)
 	})
 	t.Run("cluster ramen configmap s3storeprofiles secretref state", func(t *testing.T) {
@@ -536,6 +576,14 @@ func testClusterStatus() *report.ClustersStatus {
 									Validated: report.Validated{State: report.OK},
 									Value:     "bucket",
 								},
+								S3CompatibleEndpoint: report.ValidatedString{
+									Validated: report.Validated{State: report.OK},
+									Value:     "http://example-cluster:30000",
+								},
+								S3Region: report.ValidatedString{
+									Validated: report.Validated{State: report.OK},
+									Value:     "us-west-1",
+								},
 								S3SecretRef: report.ValidatedS3SecretRef{
 									Validated: report.Validated{
 										State: report.OK,
@@ -551,6 +599,14 @@ func testClusterStatus() *report.ClustersStatus {
 								S3Bucket: report.ValidatedString{
 									Validated: report.Validated{State: report.OK},
 									Value:     "bucket",
+								},
+								S3CompatibleEndpoint: report.ValidatedString{
+									Validated: report.Validated{State: report.OK},
+									Value:     "http://example-cluster:30000",
+								},
+								S3Region: report.ValidatedString{
+									Validated: report.Validated{State: report.OK},
+									Value:     "us-east-1",
 								},
 								S3SecretRef: report.ValidatedS3SecretRef{
 									Validated: report.Validated{
@@ -625,6 +681,14 @@ func testClusterStatus() *report.ClustersStatus {
 										Validated: report.Validated{State: report.OK},
 										Value:     "bucket",
 									},
+									S3CompatibleEndpoint: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "http://example-cluster:30000",
+									},
+									S3Region: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "us-west-1",
+									},
 									S3SecretRef: report.ValidatedS3SecretRef{
 										Validated: report.Validated{
 											State: report.OK,
@@ -640,6 +704,14 @@ func testClusterStatus() *report.ClustersStatus {
 									S3Bucket: report.ValidatedString{
 										Validated: report.Validated{State: report.OK},
 										Value:     "bucket",
+									},
+									S3CompatibleEndpoint: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "http://example-cluster:30000",
+									},
+									S3Region: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "us-east-1",
 									},
 									S3SecretRef: report.ValidatedS3SecretRef{
 										Validated: report.Validated{
@@ -713,6 +785,14 @@ func testClusterStatus() *report.ClustersStatus {
 										Validated: report.Validated{State: report.OK},
 										Value:     "bucket",
 									},
+									S3CompatibleEndpoint: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "http://example-cluster:30000",
+									},
+									S3Region: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "us-west-1",
+									},
 									S3SecretRef: report.ValidatedS3SecretRef{
 										Validated: report.Validated{
 											State: report.OK,
@@ -728,6 +808,14 @@ func testClusterStatus() *report.ClustersStatus {
 									S3Bucket: report.ValidatedString{
 										Validated: report.Validated{State: report.OK},
 										Value:     "bucket",
+									},
+									S3CompatibleEndpoint: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "http://example-cluster:30000",
+									},
+									S3Region: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "us-east-1",
 									},
 									S3SecretRef: report.ValidatedS3SecretRef{
 										Validated: report.Validated{

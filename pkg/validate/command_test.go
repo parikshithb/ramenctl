@@ -856,6 +856,14 @@ func TestValidateClustersK8s(t *testing.T) {
 									Validated: report.Validated{State: report.OK},
 									Value:     "bucket",
 								},
+								S3CompatibleEndpoint: report.ValidatedString{
+									Validated: report.Validated{State: report.OK},
+									Value:     "http://example-cluster:30000",
+								},
+								S3Region: report.ValidatedString{
+									Validated: report.Validated{State: report.OK},
+									Value:     "us-west-1",
+								},
 								S3SecretRef: report.ValidatedS3SecretRef{
 									Validated: report.Validated{
 										State: report.OK,
@@ -871,6 +879,14 @@ func TestValidateClustersK8s(t *testing.T) {
 								S3Bucket: report.ValidatedString{
 									Validated: report.Validated{State: report.OK},
 									Value:     "bucket",
+								},
+								S3CompatibleEndpoint: report.ValidatedString{
+									Validated: report.Validated{State: report.OK},
+									Value:     "http://example-cluster:30000",
+								},
+								S3Region: report.ValidatedString{
+									Validated: report.Validated{State: report.OK},
+									Value:     "us-east-1",
 								},
 								S3SecretRef: report.ValidatedS3SecretRef{
 									Validated: report.Validated{
@@ -945,6 +961,14 @@ func TestValidateClustersK8s(t *testing.T) {
 										Validated: report.Validated{State: report.OK},
 										Value:     "bucket",
 									},
+									S3CompatibleEndpoint: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "http://example-cluster:30000",
+									},
+									S3Region: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "us-west-1",
+									},
 									S3SecretRef: report.ValidatedS3SecretRef{
 										Validated: report.Validated{
 											State: report.OK,
@@ -960,6 +984,14 @@ func TestValidateClustersK8s(t *testing.T) {
 									S3Bucket: report.ValidatedString{
 										Validated: report.Validated{State: report.OK},
 										Value:     "bucket",
+									},
+									S3CompatibleEndpoint: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "http://example-cluster:30000",
+									},
+									S3Region: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "us-east-1",
 									},
 									S3SecretRef: report.ValidatedS3SecretRef{
 										Validated: report.Validated{
@@ -1033,6 +1065,14 @@ func TestValidateClustersK8s(t *testing.T) {
 										Validated: report.Validated{State: report.OK},
 										Value:     "bucket",
 									},
+									S3CompatibleEndpoint: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "http://example-cluster:30000",
+									},
+									S3Region: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "us-west-1",
+									},
 									S3SecretRef: report.ValidatedS3SecretRef{
 										Validated: report.Validated{
 											State: report.OK,
@@ -1048,6 +1088,14 @@ func TestValidateClustersK8s(t *testing.T) {
 									S3Bucket: report.ValidatedString{
 										Validated: report.Validated{State: report.OK},
 										Value:     "bucket",
+									},
+									S3CompatibleEndpoint: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "http://example-cluster:30000",
+									},
+									S3Region: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "us-east-1",
 									},
 									S3SecretRef: report.ValidatedS3SecretRef{
 										Validated: report.Validated{
@@ -1124,7 +1172,7 @@ func TestValidateClustersK8s(t *testing.T) {
 	}
 	checkClusterStatus(t, validate.report, expected)
 
-	checkSummary(t, validate.report, report.Summary{OK: 48})
+	checkSummary(t, validate.report, report.Summary{OK: 60})
 }
 
 func TestValidateClustersOcp(t *testing.T) {
@@ -1285,6 +1333,14 @@ func TestValidateClustersOcp(t *testing.T) {
 									Validated: report.Validated{State: report.OK},
 									Value:     "odrbucket-244c8f95bf0d",
 								},
+								S3CompatibleEndpoint: report.ValidatedString{
+									Validated: report.Validated{State: report.OK},
+									Value:     "https://s3-openshift-storage.apps.c1.example.com",
+								},
+								S3Region: report.ValidatedString{
+									Validated: report.Validated{State: report.OK},
+									Value:     "noobaa",
+								},
 								S3SecretRef: report.ValidatedS3SecretRef{
 									Validated: report.Validated{
 										State: report.OK,
@@ -1299,6 +1355,14 @@ func TestValidateClustersOcp(t *testing.T) {
 								S3Bucket: report.ValidatedString{
 									Validated: report.Validated{State: report.OK},
 									Value:     "odrbucket-244c8f95bf0d",
+								},
+								S3CompatibleEndpoint: report.ValidatedString{
+									Validated: report.Validated{State: report.OK},
+									Value:     "https://s3-openshift-storage.apps.c2.example.com",
+								},
+								S3Region: report.ValidatedString{
+									Validated: report.Validated{State: report.OK},
+									Value:     "noobaa",
 								},
 								S3SecretRef: report.ValidatedS3SecretRef{
 									Validated: report.Validated{
@@ -1372,6 +1436,14 @@ func TestValidateClustersOcp(t *testing.T) {
 										Validated: report.Validated{State: report.OK},
 										Value:     "odrbucket-244c8f95bf0d",
 									},
+									S3CompatibleEndpoint: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "https://s3-openshift-storage.apps.c1.example.com",
+									},
+									S3Region: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "noobaa",
+									},
 									S3SecretRef: report.ValidatedS3SecretRef{
 										Validated: report.Validated{
 											State: report.OK,
@@ -1386,6 +1458,14 @@ func TestValidateClustersOcp(t *testing.T) {
 									S3Bucket: report.ValidatedString{
 										Validated: report.Validated{State: report.OK},
 										Value:     "odrbucket-244c8f95bf0d",
+									},
+									S3CompatibleEndpoint: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "https://s3-openshift-storage.apps.c2.example.com",
+									},
+									S3Region: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "noobaa",
 									},
 									S3SecretRef: report.ValidatedS3SecretRef{
 										Validated: report.Validated{
@@ -1458,6 +1538,14 @@ func TestValidateClustersOcp(t *testing.T) {
 										Validated: report.Validated{State: report.OK},
 										Value:     "odrbucket-244c8f95bf0d",
 									},
+									S3CompatibleEndpoint: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "https://s3-openshift-storage.apps.c1.example.com",
+									},
+									S3Region: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "noobaa",
+									},
 									S3SecretRef: report.ValidatedS3SecretRef{
 										Validated: report.Validated{
 											State: report.OK,
@@ -1472,6 +1560,14 @@ func TestValidateClustersOcp(t *testing.T) {
 									S3Bucket: report.ValidatedString{
 										Validated: report.Validated{State: report.OK},
 										Value:     "odrbucket-244c8f95bf0d",
+									},
+									S3CompatibleEndpoint: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "https://s3-openshift-storage.apps.c2.example.com",
+									},
+									S3Region: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "noobaa",
 									},
 									S3SecretRef: report.ValidatedS3SecretRef{
 										Validated: report.Validated{
@@ -1547,7 +1643,7 @@ func TestValidateClustersOcp(t *testing.T) {
 	}
 	checkClusterStatus(t, validate.report, expected)
 
-	checkSummary(t, validate.report, report.Summary{OK: 46})
+	checkSummary(t, validate.report, report.Summary{OK: 58})
 }
 
 func TestValidateClustersValidateFailed(t *testing.T) {
@@ -1678,7 +1774,7 @@ func TestValidateClustersCheckS3Failed(t *testing.T) {
 	checkSummary(
 		t,
 		validate.report,
-		report.Summary{OK: 47, Problem: 1},
+		report.Summary{OK: 59, Problem: 1},
 	)
 }
 
