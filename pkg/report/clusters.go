@@ -37,6 +37,7 @@ type S3StoreProfilesSummary struct {
 	S3CompatibleEndpoint ValidatedString      `json:"endpoint"`
 	S3Region             ValidatedString      `json:"region"`
 	S3SecretRef          ValidatedS3SecretRef `json:"secretRef"`
+	CACertificate        ValidatedFingerprint `json:"caCertificate"`
 }
 
 // ConfigMapSummary is the summary of a Ramen ConfigMap.
@@ -278,6 +279,9 @@ func (s *S3StoreProfilesSummary) Equal(o *S3StoreProfilesSummary) bool {
 		return false
 	}
 	if s.S3SecretRef != o.S3SecretRef {
+		return false
+	}
+	if s.CACertificate != o.CACertificate {
 		return false
 	}
 	return true

@@ -873,6 +873,9 @@ func TestValidateClustersK8s(t *testing.T) {
 										Namespace: testK8s.config.Namespaces.RamenHubNamespace,
 									},
 								},
+								CACertificate: report.ValidatedFingerprint{
+									Validated: report.Validated{State: report.OK},
+								},
 							},
 							{
 								S3ProfileName: "minio-on-dr2",
@@ -896,6 +899,9 @@ func TestValidateClustersK8s(t *testing.T) {
 										Name:      "ramen-s3-secret-dr2",
 										Namespace: testK8s.config.Namespaces.RamenHubNamespace,
 									},
+								},
+								CACertificate: report.ValidatedFingerprint{
+									Validated: report.Validated{State: report.OK},
 								},
 							},
 						},
@@ -978,6 +984,9 @@ func TestValidateClustersK8s(t *testing.T) {
 											Namespace: testK8s.config.Namespaces.RamenHubNamespace,
 										},
 									},
+									CACertificate: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
+									},
 								},
 								{
 									S3ProfileName: "minio-on-dr2",
@@ -1001,6 +1010,9 @@ func TestValidateClustersK8s(t *testing.T) {
 											Name:      "ramen-s3-secret-dr2",
 											Namespace: testK8s.config.Namespaces.RamenHubNamespace,
 										},
+									},
+									CACertificate: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
 									},
 								},
 							},
@@ -1082,6 +1094,9 @@ func TestValidateClustersK8s(t *testing.T) {
 											Namespace: testK8s.config.Namespaces.RamenHubNamespace,
 										},
 									},
+									CACertificate: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
+									},
 								},
 								{
 									S3ProfileName: "minio-on-dr2",
@@ -1105,6 +1120,9 @@ func TestValidateClustersK8s(t *testing.T) {
 											Name:      "ramen-s3-secret-dr2",
 											Namespace: testK8s.config.Namespaces.RamenHubNamespace,
 										},
+									},
+									CACertificate: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
 									},
 								},
 							},
@@ -1172,7 +1190,7 @@ func TestValidateClustersK8s(t *testing.T) {
 	}
 	checkClusterStatus(t, validate.report, expected)
 
-	checkSummary(t, validate.report, report.Summary{OK: 60})
+	checkSummary(t, validate.report, report.Summary{OK: 66})
 }
 
 func TestValidateClustersOcp(t *testing.T) {
@@ -1349,6 +1367,10 @@ func TestValidateClustersOcp(t *testing.T) {
 										Name: "5e88331f09006ac31169b027235b50fd94458b6",
 									},
 								},
+								CACertificate: report.ValidatedFingerprint{
+									Validated: report.Validated{State: report.OK},
+									Value:     "BA:A5:C7:3B:3F:6E:06:27:19:F5:45:FC:6F:07:42:81:3B:F6:4D:61:95:CC:D5:D8:79:22:65:63:35:63:97:00",
+								},
 							},
 							{
 								S3ProfileName: "s3profile-c2-ocs-storagecluster",
@@ -1371,6 +1393,10 @@ func TestValidateClustersOcp(t *testing.T) {
 									Value: corev1.SecretReference{
 										Name: "020a140310eb1fce63e2087087d9a0bdf972b93",
 									},
+								},
+								CACertificate: report.ValidatedFingerprint{
+									Validated: report.Validated{State: report.OK},
+									Value:     "BA:A5:C7:3B:3F:6E:06:27:19:F5:45:FC:6F:07:42:81:3B:F6:4D:61:95:CC:D5:D8:79:22:65:63:35:63:97:00",
 								},
 							},
 						},
@@ -1452,6 +1478,10 @@ func TestValidateClustersOcp(t *testing.T) {
 											Name: "5e88331f09006ac31169b027235b50fd94458b6",
 										},
 									},
+									CACertificate: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
+										Value:     "BA:A5:C7:3B:3F:6E:06:27:19:F5:45:FC:6F:07:42:81:3B:F6:4D:61:95:CC:D5:D8:79:22:65:63:35:63:97:00",
+									},
 								},
 								{
 									S3ProfileName: "s3profile-c2-ocs-storagecluster",
@@ -1474,6 +1504,10 @@ func TestValidateClustersOcp(t *testing.T) {
 										Value: corev1.SecretReference{
 											Name: "020a140310eb1fce63e2087087d9a0bdf972b93",
 										},
+									},
+									CACertificate: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
+										Value:     "BA:A5:C7:3B:3F:6E:06:27:19:F5:45:FC:6F:07:42:81:3B:F6:4D:61:95:CC:D5:D8:79:22:65:63:35:63:97:00",
 									},
 								},
 							},
@@ -1554,6 +1588,10 @@ func TestValidateClustersOcp(t *testing.T) {
 											Name: "5e88331f09006ac31169b027235b50fd94458b6",
 										},
 									},
+									CACertificate: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
+										Value:     "BA:A5:C7:3B:3F:6E:06:27:19:F5:45:FC:6F:07:42:81:3B:F6:4D:61:95:CC:D5:D8:79:22:65:63:35:63:97:00",
+									},
 								},
 								{
 									S3ProfileName: "s3profile-c2-ocs-storagecluster",
@@ -1576,6 +1614,10 @@ func TestValidateClustersOcp(t *testing.T) {
 										Value: corev1.SecretReference{
 											Name: "020a140310eb1fce63e2087087d9a0bdf972b93",
 										},
+									},
+									CACertificate: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
+										Value:     "BA:A5:C7:3B:3F:6E:06:27:19:F5:45:FC:6F:07:42:81:3B:F6:4D:61:95:CC:D5:D8:79:22:65:63:35:63:97:00",
 									},
 								},
 							},
@@ -1643,7 +1685,7 @@ func TestValidateClustersOcp(t *testing.T) {
 	}
 	checkClusterStatus(t, validate.report, expected)
 
-	checkSummary(t, validate.report, report.Summary{OK: 58})
+	checkSummary(t, validate.report, report.Summary{OK: 64})
 }
 
 func TestValidateClustersValidateFailed(t *testing.T) {
@@ -1774,7 +1816,7 @@ func TestValidateClustersCheckS3Failed(t *testing.T) {
 	checkSummary(
 		t,
 		validate.report,
-		report.Summary{OK: 59, Problem: 1},
+		report.Summary{OK: 65, Problem: 1},
 	)
 }
 
