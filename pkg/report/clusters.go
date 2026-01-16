@@ -32,8 +32,8 @@ type PeerClassesSummary struct {
 
 // S3StoreProfilesSummary is the summary of S3 store profiles in the ConfigMap
 type S3StoreProfilesSummary struct {
-	S3ProfileName string               `json:"s3ProfileName"`
-	S3SecretRef   ValidatedS3SecretRef `json:"s3SecretRef"`
+	S3ProfileName string               `json:"profileName"`
+	S3SecretRef   ValidatedS3SecretRef `json:"secret"`
 }
 
 // ConfigMapSummary is the summary of a Ramen ConfigMap.
