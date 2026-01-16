@@ -32,9 +32,11 @@ type PeerClassesSummary struct {
 
 // S3StoreProfilesSummary is the summary of S3 store profiles in the ConfigMap
 type S3StoreProfilesSummary struct {
-	S3ProfileName string               `json:"profileName"`
-	S3Bucket      ValidatedString      `json:"bucket"`
-	S3SecretRef   ValidatedS3SecretRef `json:"secret"`
+	S3ProfileName        string               `json:"profileName"`
+	S3Bucket             ValidatedString      `json:"bucket"`
+	S3CompatibleEndpoint ValidatedString      `json:"endpoint"`
+	S3Region             ValidatedString      `json:"region"`
+	S3SecretRef          ValidatedS3SecretRef `json:"secret"`
 }
 
 // ConfigMapSummary is the summary of a Ramen ConfigMap.
@@ -267,6 +269,12 @@ func (s *S3StoreProfilesSummary) Equal(o *S3StoreProfilesSummary) bool {
 		return false
 	}
 	if s.S3Bucket != o.S3Bucket {
+		return false
+	}
+	if s.S3CompatibleEndpoint != o.S3CompatibleEndpoint {
+		return false
+	}
+	if s.S3Region != o.S3Region {
 		return false
 	}
 	if s.S3SecretRef != o.S3SecretRef {
