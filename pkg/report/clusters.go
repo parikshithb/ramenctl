@@ -36,6 +36,7 @@ type S3StoreProfilesSummary struct {
 	S3Bucket             ValidatedString      `json:"bucket"`
 	S3CompatibleEndpoint ValidatedString      `json:"endpoint"`
 	S3Region             ValidatedString      `json:"region"`
+	CACertificate        ValidatedFingerprint `json:"caCertificate"`
 	S3SecretRef          ValidatedS3SecretRef `json:"secret"`
 }
 
@@ -278,6 +279,9 @@ func (s *S3StoreProfilesSummary) Equal(o *S3StoreProfilesSummary) bool {
 		return false
 	}
 	if s.S3SecretRef != o.S3SecretRef {
+		return false
+	}
+	if s.CACertificate != o.CACertificate {
 		return false
 	}
 	return true

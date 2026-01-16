@@ -63,6 +63,12 @@ type ValidatedS3SecretRef struct {
 	Value corev1.SecretReference `json:"value"`
 }
 
+// ValidatedFingerprint is a validated fingerprint property.
+type ValidatedFingerprint struct {
+	Validated
+	Value string `json:"value,omitempty"`
+}
+
 // ValidatedS3StoreProfilesList is a validated list of S3 store profiles.
 type ValidatedS3StoreProfilesList struct {
 	Validated

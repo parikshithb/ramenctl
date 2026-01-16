@@ -450,6 +450,7 @@ func (c *Command) validatedHubS3Profiles(
 			S3Bucket:             c.validatedRequiredString(profile.S3Bucket),
 			S3CompatibleEndpoint: c.validatedRequiredString(profile.S3CompatibleEndpoint),
 			S3Region:             c.validatedRequiredString(profile.S3Region),
+			CACertificate:        c.validatedCertificateFingerprint(profile.CACertificates),
 			S3SecretRef:          validatedSecret,
 		}
 		s.Value = append(s.Value, ps)
@@ -500,6 +501,11 @@ func (c *Command) validatedManagedClusterS3Profiles(
 			S3Region: c.validatedManagedClusterRequiredString(
 				profile.S3Region,
 				hubS3Profile.S3Region,
+				found,
+			),
+			CACertificate: c.validatedManagedClusterCertificateFingerprint(
+				profile.CACertificates,
+				hubS3Profile.CACertificate,
 				found,
 			),
 			S3SecretRef: validatedSecret,
@@ -563,6 +569,77 @@ func (c *Command) validatedManagedClusterRequiredString(
 		validated.Description = fmt.Sprintf("Does not match hub: %q", hubValue.Value)
 	default:
 		validated.State = report.OK
+	}
+
+	addValidation(c.report.Summary, &validated)
+	return validated
+}
+
+func (c *Command) validatedCertificateFingerprint(certPem []byte) report.ValidatedFingerprint {
+	validated := report.ValidatedFingerprint{}
+
+	switch {
+	case len(certPem) == 0:
+		// Empty certificate is validated OK, since it is an optional field.
+		validated.State = report.OK
+	default:
+		fingerprint, err := report.CertificateFingerprint(certPem)
+		if err != nil {
+			validated.State = report.Problem
+			validated.Description = fmt.Sprintf("Invalid certificate: %s", err)
+		} else {
+			validated.Value = fingerprint
+			validated.State = report.OK
+		}
+	}
+
+	addValidation(c.report.Summary, &validated)
+	return validated
+}
+
+func (c *Command) validatedManagedClusterCertificateFingerprint(
+	certPem []byte,
+	hubValue report.ValidatedFingerprint,
+	found bool,
+) report.ValidatedFingerprint {
+	validated := report.ValidatedFingerprint{}
+
+	switch {
+	case !found:
+		validated.State = report.Problem
+		validated.Description = "Profile not found in hub"
+	case hubValue.State == report.Problem:
+		// Hub has invalid certificate, can't validate against it.
+		validated.State = report.Problem
+		validated.Description = "Hub certificate is invalid"
+	case len(certPem) == 0:
+		// Managed cluster has no certificate.
+		if hubValue.Value != "" {
+			validated.State = report.Problem
+			validated.Description = "Missing certificate, but hub has a certificate"
+		} else {
+			// Validated OK if both Managed cluster and Hub have no certificate.
+			validated.State = report.OK
+		}
+	default:
+		// Managed cluster has certificate, compute fingerprint.
+		fingerprint, err := report.CertificateFingerprint(certPem)
+		if err != nil {
+			validated.State = report.Problem
+			validated.Description = fmt.Sprintf("Invalid certificate: %s", err)
+		} else {
+			validated.Value = fingerprint
+			switch {
+			case hubValue.Value == "":
+				validated.State = report.Problem
+				validated.Description = "Has certificate, but hub does not have a certificate"
+			case fingerprint != hubValue.Value:
+				validated.State = report.Problem
+				validated.Description = fmt.Sprintf("Does not match hub: %q", hubValue.Value)
+			default:
+				validated.State = report.OK
+			}
+		}
 	}
 
 	addValidation(c.report.Summary, &validated)

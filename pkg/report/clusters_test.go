@@ -210,6 +210,17 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.Value.Name = helpers.Modified
 		checkClustersNotEqual(t, c1, c2)
 	})
+	t.Run("hub ramen configmap s3storeprofiles caCertificate state", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].CACertificate.State = report.Problem
+		checkClustersNotEqual(t, c1, c2)
+	})
+
+	t.Run("hub ramen configmap s3storeprofiles caCertificate value", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].CACertificate.Value = helpers.Modified
+		checkClustersNotEqual(t, c1, c2)
+	})
 
 	// Hub ramen deployment tests
 
@@ -346,6 +357,16 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 	t.Run("cluster ramen configmap s3storeprofiles secretref value name", func(t *testing.T) {
 		c2 := testClusterStatus()
 		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.Value.Name = helpers.Modified
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("cluster ramen configmap s3storeprofiles caCertificate state", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].CACertificate.State = report.Problem
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("cluster ramen configmap s3storeprofiles caCertificate value", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].CACertificate.Value = helpers.Modified
 		checkClustersNotEqual(t, c1, c2)
 	})
 	t.Run("cluster ramen deployment name", func(t *testing.T) {
@@ -593,6 +614,10 @@ func testClusterStatus() *report.ClustersStatus {
 										Namespace: "ramen-system",
 									},
 								},
+								// CACertificate is optional, empty is OK if hub also has no cert.
+								CACertificate: report.ValidatedFingerprint{
+									Validated: report.Validated{State: report.OK},
+								},
 							},
 							{
 								S3ProfileName: "s3-profile-dr2",
@@ -616,6 +641,9 @@ func testClusterStatus() *report.ClustersStatus {
 										Name:      "ramen-s3-secret-dr2",
 										Namespace: "ramen-system",
 									},
+								},
+								CACertificate: report.ValidatedFingerprint{
+									Validated: report.Validated{State: report.OK},
 								},
 							},
 						},
@@ -698,6 +726,9 @@ func testClusterStatus() *report.ClustersStatus {
 											Namespace: "ramen-system",
 										},
 									},
+									CACertificate: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
+									},
 								},
 								{
 									S3ProfileName: "s3-profile-dr2",
@@ -721,6 +752,9 @@ func testClusterStatus() *report.ClustersStatus {
 											Name:      "ramen-s3-secret-dr2",
 											Namespace: "ramen-system",
 										},
+									},
+									CACertificate: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
 									},
 								},
 							},
@@ -802,6 +836,9 @@ func testClusterStatus() *report.ClustersStatus {
 											Namespace: "ramen-system",
 										},
 									},
+									CACertificate: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
+									},
 								},
 								{
 									S3ProfileName: "s3-profile-dr2",
@@ -825,6 +862,9 @@ func testClusterStatus() *report.ClustersStatus {
 											Name:      "ramen-s3-secret-dr2",
 											Namespace: "ramen-system",
 										},
+									},
+									CACertificate: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
 									},
 								},
 							},
