@@ -85,7 +85,7 @@ only needs to define its `content` template:
 <head>
     <title>{{.HeaderData.Title}}</title>
     <style>
-        {{ includeCSS "style" . | indent 8 }}
+        {{template "style" .}}
     </style>
 </head>
 <body>
@@ -94,7 +94,7 @@ only needs to define its `content` template:
 </header>
 <main>
     <section>
-        {{ includeHTML "content" . | indent 8 }}
+        {{template "content" .}}
     </section>
     <section>
         <h2>Report Details</h2>
@@ -114,23 +114,6 @@ Each command defines only its unique content:
 <h2>Application Status</h2>
 <p>Hub, primary cluster, and secondary cluster validation details here.</p>
 {{- end}}
-```
-
-### Including Templates with Proper Indentation
-
-Go's built-in `{{template}}` doesn't support indentation - included content
-appears at column 0. We provide custom functions for WYSIWYG indentation:
-
-- `includeHTML "name" data` - executes a template, returns `template.HTML`
-- `includeCSS "name" data` - executes a template, returns `template.CSS`
-- `indent N` - adds N spaces after each newline (preserves type)
-
-The indent value matches the visual column position in the template source:
-
-```html
-<section>
-    {{ includeHTML "content" . | indent 4 }}
-</section>
 ```
 
 ### Template Data
@@ -155,29 +138,17 @@ func (d *templateData) HeaderData() report.HeaderData {
 ### The shared report template
 
 The report package provides the `Template()` function loading the common
-`report.tmpl` template and functions such as `includeHTML` and `indent`.
+`report.tmpl` template and functions such as `formatTime`.
 
 ```go
 //go:embed templates/*.tmpl
 var templates embed.FS
 
 func Template() (*template.Template, error) {
-	var tmpl *template.Template
-
 	funcs := template.FuncMap{
-		"includeHTML": func(name string, data any) (template.HTML, error) {
-			return includeHTML(tmpl, name, data)
-		},
-		"includeCSS": func(name string, data any) (template.CSS, error) {
-			return includeCSS(tmpl, name, data)
-		},
-		"indent": indentEscaped,
+        "formatTime": formatTime,
 	}
-
-	var err error
-	tmpl, err = template.New("").Funcs(funcs).ParseFS(templates, "templates/*.tmpl")
-
-	return tmpl, err
+	return template.New("").Funcs(funcs).ParseFS(templates, "templates/*.tmpl")
 }
 ```
 
@@ -221,3 +192,9 @@ To add HTML support for a new command (e.g., `gather-application`):
 1. Create `templates/content.tmpl` defining the `content` template
 2. Create `html.go` with `templateData` type and `Template()` function
 3. Add `WriteHTML()` method to the report type
+
+## Testing HTML output
+
+Go html/template does not preserve indentation when including templates, and
+there is no good way to fix this. To have properly formatted output in the
+tests, we reformat golden test files and test output with `report.FormatHTML()`.

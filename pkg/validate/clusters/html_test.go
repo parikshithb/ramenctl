@@ -42,7 +42,7 @@ func TestWriteHTML(t *testing.T) {
 		t.Fatalf("WriteHTML() error: %v", err)
 	}
 
-	actual := buf.String()
+	actual := report.FormatHTML(buf.String())
 
 	expected, err := os.ReadFile("testdata/report.html")
 	if err != nil {

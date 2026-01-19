@@ -19,6 +19,7 @@ require (
 	github.com/ramendr/ramen/e2e v0.0.0-20250925105626-1e3bf8dbc4d1
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/viper v1.19.0
+	github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4
 	go.uber.org/zap v1.27.0
 	k8s.io/api v0.33.2
 	k8s.io/apimachinery v0.33.2
