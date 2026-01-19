@@ -16,7 +16,7 @@ build := github.com/ramendr/ramenctl/pkg/build
 ldflags := -X '$(build).Version=$(version)' \
 		   -X '$(build).Commit=$(commit)'
 
-.PHONY: ramenctl examples test clean coverage lint fmt
+.PHONY: ramenctl examples test clean coverage lint fmt htmlfmt
 
 all: ramenctl examples
 
@@ -28,6 +28,9 @@ examples:
 
 fmt:
 	golangci-lint fmt
+
+htmlfmt:
+	find pkg -path '*/testdata/*.html' -exec $(GO) run ./tools/htmlfmt {} \;
 
 spell:
 	codespell --skip="go.sum"
