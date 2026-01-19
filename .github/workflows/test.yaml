@@ -39,6 +39,22 @@ jobs:
         with:
           version: latest
 
+  htmlfmt:
+    name: HTML Format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Setup go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: false
+      - name: Check HTML formatting
+        run: |
+          make htmlfmt
+          git diff --exit-code
+
   build-matrix:
     name: Build
     runs-on: ubuntu-latest
