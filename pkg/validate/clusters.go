@@ -27,6 +27,10 @@ import (
 	"github.com/ramendr/ramenctl/pkg/time"
 )
 
+const (
+	profileNotFoundInHub = "Profile not found in hub"
+)
+
 func (c *Command) Clusters() error {
 	if !c.validateConfig() {
 		return c.failed()
@@ -439,10 +443,14 @@ func (c *Command) validatedHubS3Profiles(
 	for i := range config.S3StoreProfiles {
 		profile := &config.S3StoreProfiles[i]
 
-		validatedSecret, err := c.validatedSecretRef(profile.S3SecretRef, cluster, configNamespace)
+		validatedSecret, err := c.validatedHubSecretRef(
+			profile.S3SecretRef,
+			cluster,
+			configNamespace,
+		)
 		if err != nil {
-			return fmt.Errorf("failed to validate s3 profile %q secret: %w",
-				profile.S3ProfileName, err)
+			return fmt.Errorf("failed to validate s3 profile %q secret in cluster %q: %w",
+				profile.S3ProfileName, cluster.Name, err)
 		}
 
 		ps := report.S3StoreProfilesSummary{
@@ -478,13 +486,14 @@ func (c *Command) validatedManagedClusterS3Profiles(
 	for i := range config.S3StoreProfiles {
 		profile := &config.S3StoreProfiles[i]
 
-		validatedSecret, err := c.validatedSecretRef(profile.S3SecretRef, cluster, configNamespace)
-		if err != nil {
-			return fmt.Errorf("failed to validate s3 profile %q secret: %w",
-				profile.S3ProfileName, err)
-		}
-
 		hubS3Profile, found := c.lookupHubS3StoreProfileSummary(profile.S3ProfileName)
+
+		validatedSecret, err := c.validatedManagedClusterSecretRef(
+			profile.S3SecretRef, cluster, configNamespace, hubS3Profile.S3SecretRef, found)
+		if err != nil {
+			return fmt.Errorf("failed to validate s3 profile %q secret in cluster %q: %w",
+				profile.S3ProfileName, cluster.Name, err)
+		}
 
 		ps := report.S3StoreProfilesSummary{
 			S3ProfileName: profile.S3ProfileName,
@@ -560,7 +569,7 @@ func (c *Command) validatedManagedClusterRequiredString(
 	switch {
 	case !found:
 		validated.State = report.Problem
-		validated.Description = "Profile not found in hub"
+		validated.Description = profileNotFoundInHub
 	case value == "":
 		validated.State = report.Problem
 		validated.Description = "Value is not set"
@@ -607,7 +616,7 @@ func (c *Command) validatedManagedClusterCertificateFingerprint(
 	switch {
 	case !found:
 		validated.State = report.Problem
-		validated.Description = "Profile not found in hub"
+		validated.Description = profileNotFoundInHub
 	case hubValue.State == report.Problem:
 		// Hub has invalid certificate, can't validate against it.
 		validated.State = report.Problem
@@ -646,43 +655,184 @@ func (c *Command) validatedManagedClusterCertificateFingerprint(
 	return validated
 }
 
-func (c *Command) validatedSecretRef(
+func (c *Command) validatedHubSecretRef(
 	secretRef corev1.SecretReference,
 	cluster *types.Cluster,
 	configNamespace string,
-) (report.ValidatedS3SecretRef, error) {
+) (report.S3SecretSummary, error) {
 	log := c.Logger()
-	reader := c.outputReader(cluster.Name)
-	validated := report.ValidatedS3SecretRef{Value: secretRef}
 
-	namespace := secretRef.Namespace
+	validated := report.S3SecretSummary{
+		Name:      c.validatedRequiredString(secretRef.Name),
+		Namespace: c.validatedSecretNamespaceString(secretRef.Namespace, configNamespace),
+	}
+
+	secret, err := c.readSecret(cluster, secretRef.Name, secretRef.Namespace, configNamespace)
+	if err != nil {
+		return validated, err
+	}
+
+	if secret == nil {
+		log.Debugf("Secret \"%s/%s\" does not exist in cluster %q",
+			secretRef.Namespace, secretRef.Name, cluster.Name)
+		validated.Deleted = c.validatedDeleted(nil)
+	} else {
+		log.Debugf("Read secret \"%s/%s\" from cluster %q",
+			secretRef.Namespace, secretRef.Name, cluster.Name)
+		validated.Deleted = c.validatedDeleted(secret)
+		validated.AWSAccessKeyID = c.validatedSecretKeyFingerprint(secret, "AWS_ACCESS_KEY_ID")
+		validated.AWSSecretAccessKey = c.validatedSecretKeyFingerprint(
+			secret,
+			"AWS_SECRET_ACCESS_KEY",
+		)
+	}
+
+	return validated, nil
+}
+
+func (c *Command) validatedManagedClusterSecretRef(
+	secretRef corev1.SecretReference,
+	cluster *types.Cluster,
+	configNamespace string,
+	hubSecret report.S3SecretSummary,
+	found bool,
+) (report.S3SecretSummary, error) {
+	log := c.Logger()
+
+	validated := report.S3SecretSummary{
+		Name:      c.validatedManagedClusterRequiredString(secretRef.Name, hubSecret.Name, found),
+		Namespace: c.validatedSecretNamespaceString(secretRef.Namespace, configNamespace),
+	}
+
+	secret, err := c.readSecret(cluster, secretRef.Name, secretRef.Namespace, configNamespace)
+	if err != nil {
+		return validated, err
+	}
+
+	if secret == nil {
+		log.Debugf("Secret \"%s/%s\" does not exist in cluster %q",
+			secretRef.Namespace, secretRef.Name, cluster.Name)
+		validated.Deleted = c.validatedDeleted(nil)
+	} else {
+		log.Debugf("Read secret \"%s/%s\" from cluster %q",
+			secretRef.Namespace, secretRef.Name, cluster.Name)
+		validated.Deleted = c.validatedDeleted(secret)
+		validated.AWSAccessKeyID = c.validatedManagedClusterSecretKeyFingerprint(
+			secret, "AWS_ACCESS_KEY_ID", hubSecret.AWSAccessKeyID, found)
+		validated.AWSSecretAccessKey = c.validatedManagedClusterSecretKeyFingerprint(
+			secret, "AWS_SECRET_ACCESS_KEY", hubSecret.AWSSecretAccessKey, found)
+	}
+
+	return validated, nil
+}
+
+func (c *Command) readSecret(
+	cluster *types.Cluster,
+	name, namespace, configNamespace string,
+) (*corev1.Secret, error) {
 	if namespace == "" {
 		namespace = configNamespace
 	}
-
-	_, err := core.ReadSecret(reader, secretRef.Name, namespace)
+	reader := c.outputReader(cluster.Name)
+	secret, err := core.ReadSecret(reader, name, namespace)
 	if err != nil {
 		if !errors.Is(err, os.ErrNotExist) {
-			err := fmt.Errorf("failed to read secret \"%s/%s\" from cluster %q: %w",
-				namespace, secretRef.Name, cluster.Name, err)
-			return validated, err
+			return nil, fmt.Errorf("failed to read secret \"%s/%s\" from cluster %q: %w",
+				namespace, name, cluster.Name, err)
 		}
-		log.Debugf("Secret \"%s/%s\" does not exist in cluster %q",
-			namespace, secretRef.Name, cluster.Name)
+		// Secret doesn't exist
+		return nil, nil
+	}
+	return secret, nil
+}
+
+func (c *Command) validatedSecretNamespaceString(
+	namespace string,
+	configNamespace string,
+) report.ValidatedString {
+	validated := report.ValidatedString{Value: namespace}
+
+	// Namespace can be empty (defaults to configmap namespace)
+	// But if specified, must match configmap namespace.
+	if namespace != "" && namespace != configNamespace {
 		validated.State = report.Problem
-		validated.Description = "Secret does not exist"
+		validated.Description = fmt.Sprintf("Must be in configmap namespace %q", configNamespace)
 	} else {
-		log.Debugf("Read secret \"%s/%s\" from cluster %q",
-			namespace, secretRef.Name, cluster.Name)
-		// TODO:
-		// - Validate secret identical to hub secret?
-		// - Validate secret required fields?
 		validated.State = report.OK
 	}
 
 	addValidation(c.report.Summary, &validated)
+	return validated
+}
 
-	return validated, nil
+func (c *Command) validatedSecretKeyFingerprint(
+	secret *corev1.Secret,
+	key string,
+) report.ValidatedFingerprint {
+	validated := report.ValidatedFingerprint{}
+
+	data, exists := secret.Data[key]
+	switch {
+	case !exists:
+		validated.State = report.Problem
+		validated.Description = "Key is missing"
+	case len(data) == 0:
+		validated.State = report.Problem
+		validated.Description = "Key is empty"
+	default:
+		fingerprint, err := report.Fingerprint(data)
+		if err != nil {
+			panic(fmt.Sprintf("unexpected Fingerprint() error: %v", err))
+		}
+		validated.Value = fingerprint
+		validated.State = report.OK
+	}
+
+	addValidation(c.report.Summary, &validated)
+	return validated
+}
+
+func (c *Command) validatedManagedClusterSecretKeyFingerprint(
+	secret *corev1.Secret,
+	key string,
+	hubValue report.ValidatedFingerprint,
+	found bool,
+) report.ValidatedFingerprint {
+	validated := report.ValidatedFingerprint{}
+
+	switch {
+	case !found:
+		validated.State = report.Problem
+		validated.Description = profileNotFoundInHub
+	case hubValue.Value == "":
+		validated.State = report.Problem
+		validated.Description = "Hub key is missing"
+	default:
+		data, exists := secret.Data[key]
+		switch {
+		case !exists:
+			validated.State = report.Problem
+			validated.Description = "Key is missing"
+		case len(data) == 0:
+			validated.State = report.Problem
+			validated.Description = "Key is empty"
+		default:
+			fingerprint, err := report.Fingerprint(data)
+			if err != nil {
+				panic(fmt.Sprintf("unexpected Fingerprint() error: %v", err))
+			}
+			validated.Value = fingerprint
+			if fingerprint != hubValue.Value {
+				validated.State = report.Problem
+				validated.Description = fmt.Sprintf("Does not match hub: %q", hubValue.Value)
+			} else {
+				validated.State = report.OK
+			}
+		}
+	}
+
+	addValidation(c.report.Summary, &validated)
+	return validated
 }
 
 func (c *Command) validateDeployment(

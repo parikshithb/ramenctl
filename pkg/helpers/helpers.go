@@ -18,6 +18,12 @@ import (
 
 const (
 	Modified = "modified"
+
+	// Secret key fingerprints (SHA-256 hashes) for testdata.
+	// Both K8s and OCP testdata secrets have the same data values.
+	AccessKeyFingerprint = "F3:1C:B8:5A:2C:33:BA:C3:57:84:22:D5:11:F5:35:40:FF:A8:6A:34:B8:CD:42:AC:86:65:E2:2B:E1:05:EA:23"
+	//nolint:gosec
+	SecretKeyFingerprint = "BC:42:FE:14:DB:F0:91:1C:91:1F:8F:CF:72:AF:CE:C5:83:5C:AF:93:AC:08:40:CE:31:D8:67:CA:AC:BC:E4:16"
 )
 
 func MarshalYAML(t *testing.T, a any) string {
