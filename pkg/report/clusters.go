@@ -37,7 +37,16 @@ type S3StoreProfilesSummary struct {
 	S3CompatibleEndpoint ValidatedString      `json:"endpoint"`
 	S3Region             ValidatedString      `json:"region"`
 	CACertificate        ValidatedFingerprint `json:"caCertificate"`
-	S3SecretRef          ValidatedS3SecretRef `json:"secret"`
+	S3SecretRef          S3SecretSummary      `json:"secret"`
+}
+
+// S3SecretSummary is the summary of S3 Secret in the ConfigMap.
+type S3SecretSummary struct {
+	Name               ValidatedString      `json:"name"`
+	Namespace          ValidatedString      `json:"namespace"`
+	Deleted            ValidatedBool        `json:"deleted"`
+	AWSAccessKeyID     ValidatedFingerprint `json:"awsAccessKeyID"`
+	AWSSecretAccessKey ValidatedFingerprint `json:"awsSecretAccessKey"`
 }
 
 // ConfigMapSummary is the summary of a Ramen ConfigMap.

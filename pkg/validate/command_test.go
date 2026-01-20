@@ -867,13 +867,25 @@ func TestValidateClustersK8s(t *testing.T) {
 									Validated: report.Validated{State: report.OK},
 									Value:     "us-west-1",
 								},
-								S3SecretRef: report.ValidatedS3SecretRef{
-									Validated: report.Validated{
-										State: report.OK,
+								S3SecretRef: report.S3SecretSummary{
+									Name: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "ramen-s3-secret-dr1",
 									},
-									Value: corev1.SecretReference{
-										Name:      "ramen-s3-secret-dr1",
-										Namespace: testK8s.config.Namespaces.RamenHubNamespace,
+									Namespace: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     testK8s.config.Namespaces.RamenHubNamespace,
+									},
+									Deleted: report.ValidatedBool{
+										Validated: report.Validated{State: report.OK},
+									},
+									AWSAccessKeyID: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
+										Value:     helpers.AccessKeyFingerprint,
+									},
+									AWSSecretAccessKey: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
+										Value:     helpers.SecretKeyFingerprint,
 									},
 								},
 								// CACertificate is optional, empty is OK if hub also has no cert.
@@ -895,13 +907,25 @@ func TestValidateClustersK8s(t *testing.T) {
 									Validated: report.Validated{State: report.OK},
 									Value:     "us-east-1",
 								},
-								S3SecretRef: report.ValidatedS3SecretRef{
-									Validated: report.Validated{
-										State: report.OK,
+								S3SecretRef: report.S3SecretSummary{
+									Name: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "ramen-s3-secret-dr2",
 									},
-									Value: corev1.SecretReference{
-										Name:      "ramen-s3-secret-dr2",
-										Namespace: testK8s.config.Namespaces.RamenHubNamespace,
+									Namespace: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     testK8s.config.Namespaces.RamenHubNamespace,
+									},
+									Deleted: report.ValidatedBool{
+										Validated: report.Validated{State: report.OK},
+									},
+									AWSAccessKeyID: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
+										Value:     helpers.AccessKeyFingerprint,
+									},
+									AWSSecretAccessKey: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
+										Value:     helpers.SecretKeyFingerprint,
 									},
 								},
 								CACertificate: report.ValidatedFingerprint{
@@ -979,13 +1003,25 @@ func TestValidateClustersK8s(t *testing.T) {
 										Validated: report.Validated{State: report.OK},
 										Value:     "us-west-1",
 									},
-									S3SecretRef: report.ValidatedS3SecretRef{
-										Validated: report.Validated{
-											State: report.OK,
+									S3SecretRef: report.S3SecretSummary{
+										Name: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+											Value:     "ramen-s3-secret-dr1",
 										},
-										Value: corev1.SecretReference{
-											Name:      "ramen-s3-secret-dr1",
-											Namespace: testK8s.config.Namespaces.RamenHubNamespace,
+										Namespace: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+											Value:     testK8s.config.Namespaces.RamenHubNamespace,
+										},
+										Deleted: report.ValidatedBool{
+											Validated: report.Validated{State: report.OK},
+										},
+										AWSAccessKeyID: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.AccessKeyFingerprint,
+										},
+										AWSSecretAccessKey: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.SecretKeyFingerprint,
 										},
 									},
 									CACertificate: report.ValidatedFingerprint{
@@ -1006,13 +1042,25 @@ func TestValidateClustersK8s(t *testing.T) {
 										Validated: report.Validated{State: report.OK},
 										Value:     "us-east-1",
 									},
-									S3SecretRef: report.ValidatedS3SecretRef{
-										Validated: report.Validated{
-											State: report.OK,
+									S3SecretRef: report.S3SecretSummary{
+										Name: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+											Value:     "ramen-s3-secret-dr2",
 										},
-										Value: corev1.SecretReference{
-											Name:      "ramen-s3-secret-dr2",
-											Namespace: testK8s.config.Namespaces.RamenHubNamespace,
+										Namespace: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+											Value:     testK8s.config.Namespaces.RamenHubNamespace,
+										},
+										Deleted: report.ValidatedBool{
+											Validated: report.Validated{State: report.OK},
+										},
+										AWSAccessKeyID: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.AccessKeyFingerprint,
+										},
+										AWSSecretAccessKey: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.SecretKeyFingerprint,
 										},
 									},
 									CACertificate: report.ValidatedFingerprint{
@@ -1089,13 +1137,25 @@ func TestValidateClustersK8s(t *testing.T) {
 										Validated: report.Validated{State: report.OK},
 										Value:     "us-west-1",
 									},
-									S3SecretRef: report.ValidatedS3SecretRef{
-										Validated: report.Validated{
-											State: report.OK,
+									S3SecretRef: report.S3SecretSummary{
+										Name: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+											Value:     "ramen-s3-secret-dr1",
 										},
-										Value: corev1.SecretReference{
-											Name:      "ramen-s3-secret-dr1",
-											Namespace: testK8s.config.Namespaces.RamenHubNamespace,
+										Namespace: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+											Value:     testK8s.config.Namespaces.RamenHubNamespace,
+										},
+										Deleted: report.ValidatedBool{
+											Validated: report.Validated{State: report.OK},
+										},
+										AWSAccessKeyID: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.AccessKeyFingerprint,
+										},
+										AWSSecretAccessKey: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.SecretKeyFingerprint,
 										},
 									},
 									CACertificate: report.ValidatedFingerprint{
@@ -1116,13 +1176,25 @@ func TestValidateClustersK8s(t *testing.T) {
 										Validated: report.Validated{State: report.OK},
 										Value:     "us-east-1",
 									},
-									S3SecretRef: report.ValidatedS3SecretRef{
-										Validated: report.Validated{
-											State: report.OK,
+									S3SecretRef: report.S3SecretSummary{
+										Name: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+											Value:     "ramen-s3-secret-dr2",
 										},
-										Value: corev1.SecretReference{
-											Name:      "ramen-s3-secret-dr2",
-											Namespace: testK8s.config.Namespaces.RamenHubNamespace,
+										Namespace: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+											Value:     testK8s.config.Namespaces.RamenHubNamespace,
+										},
+										Deleted: report.ValidatedBool{
+											Validated: report.Validated{State: report.OK},
+										},
+										AWSAccessKeyID: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.AccessKeyFingerprint,
+										},
+										AWSSecretAccessKey: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.SecretKeyFingerprint,
 										},
 									},
 									CACertificate: report.ValidatedFingerprint{
@@ -1194,7 +1266,7 @@ func TestValidateClustersK8s(t *testing.T) {
 	}
 	checkClusterStatus(t, validate.report, expected)
 
-	checkSummary(t, validate.report, report.Summary{OK: 66})
+	checkSummary(t, validate.report, report.Summary{OK: 90})
 }
 
 func TestValidateClustersOcp(t *testing.T) {
@@ -1363,12 +1435,24 @@ func TestValidateClustersOcp(t *testing.T) {
 									Validated: report.Validated{State: report.OK},
 									Value:     "noobaa",
 								},
-								S3SecretRef: report.ValidatedS3SecretRef{
-									Validated: report.Validated{
-										State: report.OK,
+								S3SecretRef: report.S3SecretSummary{
+									Name: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "5e88331f09006ac31169b027235b50fd94458b6",
 									},
-									Value: corev1.SecretReference{
-										Name: "5e88331f09006ac31169b027235b50fd94458b6",
+									Namespace: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+									},
+									Deleted: report.ValidatedBool{
+										Validated: report.Validated{State: report.OK},
+									},
+									AWSAccessKeyID: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
+										Value:     helpers.AccessKeyFingerprint,
+									},
+									AWSSecretAccessKey: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
+										Value:     helpers.SecretKeyFingerprint,
 									},
 								},
 								CACertificate: report.ValidatedFingerprint{
@@ -1390,12 +1474,24 @@ func TestValidateClustersOcp(t *testing.T) {
 									Validated: report.Validated{State: report.OK},
 									Value:     "noobaa",
 								},
-								S3SecretRef: report.ValidatedS3SecretRef{
-									Validated: report.Validated{
-										State: report.OK,
+								S3SecretRef: report.S3SecretSummary{
+									Name: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "020a140310eb1fce63e2087087d9a0bdf972b93",
 									},
-									Value: corev1.SecretReference{
-										Name: "020a140310eb1fce63e2087087d9a0bdf972b93",
+									Namespace: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+									},
+									Deleted: report.ValidatedBool{
+										Validated: report.Validated{State: report.OK},
+									},
+									AWSAccessKeyID: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
+										Value:     helpers.AccessKeyFingerprint,
+									},
+									AWSSecretAccessKey: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
+										Value:     helpers.SecretKeyFingerprint,
 									},
 								},
 								CACertificate: report.ValidatedFingerprint{
@@ -1474,12 +1570,24 @@ func TestValidateClustersOcp(t *testing.T) {
 										Validated: report.Validated{State: report.OK},
 										Value:     "noobaa",
 									},
-									S3SecretRef: report.ValidatedS3SecretRef{
-										Validated: report.Validated{
-											State: report.OK,
+									S3SecretRef: report.S3SecretSummary{
+										Name: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+											Value:     "5e88331f09006ac31169b027235b50fd94458b6",
 										},
-										Value: corev1.SecretReference{
-											Name: "5e88331f09006ac31169b027235b50fd94458b6",
+										Namespace: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+										},
+										Deleted: report.ValidatedBool{
+											Validated: report.Validated{State: report.OK},
+										},
+										AWSAccessKeyID: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.AccessKeyFingerprint,
+										},
+										AWSSecretAccessKey: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.SecretKeyFingerprint,
 										},
 									},
 									CACertificate: report.ValidatedFingerprint{
@@ -1501,12 +1609,24 @@ func TestValidateClustersOcp(t *testing.T) {
 										Validated: report.Validated{State: report.OK},
 										Value:     "noobaa",
 									},
-									S3SecretRef: report.ValidatedS3SecretRef{
-										Validated: report.Validated{
-											State: report.OK,
+									S3SecretRef: report.S3SecretSummary{
+										Name: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+											Value:     "020a140310eb1fce63e2087087d9a0bdf972b93",
 										},
-										Value: corev1.SecretReference{
-											Name: "020a140310eb1fce63e2087087d9a0bdf972b93",
+										Namespace: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+										},
+										Deleted: report.ValidatedBool{
+											Validated: report.Validated{State: report.OK},
+										},
+										AWSAccessKeyID: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.AccessKeyFingerprint,
+										},
+										AWSSecretAccessKey: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.SecretKeyFingerprint,
 										},
 									},
 									CACertificate: report.ValidatedFingerprint{
@@ -1584,12 +1704,24 @@ func TestValidateClustersOcp(t *testing.T) {
 										Validated: report.Validated{State: report.OK},
 										Value:     "noobaa",
 									},
-									S3SecretRef: report.ValidatedS3SecretRef{
-										Validated: report.Validated{
-											State: report.OK,
+									S3SecretRef: report.S3SecretSummary{
+										Name: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+											Value:     "5e88331f09006ac31169b027235b50fd94458b6",
 										},
-										Value: corev1.SecretReference{
-											Name: "5e88331f09006ac31169b027235b50fd94458b6",
+										Namespace: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+										},
+										Deleted: report.ValidatedBool{
+											Validated: report.Validated{State: report.OK},
+										},
+										AWSAccessKeyID: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.AccessKeyFingerprint,
+										},
+										AWSSecretAccessKey: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.SecretKeyFingerprint,
 										},
 									},
 									CACertificate: report.ValidatedFingerprint{
@@ -1611,12 +1743,24 @@ func TestValidateClustersOcp(t *testing.T) {
 										Validated: report.Validated{State: report.OK},
 										Value:     "noobaa",
 									},
-									S3SecretRef: report.ValidatedS3SecretRef{
-										Validated: report.Validated{
-											State: report.OK,
+									S3SecretRef: report.S3SecretSummary{
+										Name: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+											Value:     "020a140310eb1fce63e2087087d9a0bdf972b93",
 										},
-										Value: corev1.SecretReference{
-											Name: "020a140310eb1fce63e2087087d9a0bdf972b93",
+										Namespace: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+										},
+										Deleted: report.ValidatedBool{
+											Validated: report.Validated{State: report.OK},
+										},
+										AWSAccessKeyID: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.AccessKeyFingerprint,
+										},
+										AWSSecretAccessKey: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.SecretKeyFingerprint,
 										},
 									},
 									CACertificate: report.ValidatedFingerprint{
@@ -1689,7 +1833,7 @@ func TestValidateClustersOcp(t *testing.T) {
 	}
 	checkClusterStatus(t, validate.report, expected)
 
-	checkSummary(t, validate.report, report.Summary{OK: 64})
+	checkSummary(t, validate.report, report.Summary{OK: 88})
 }
 
 func TestValidateClustersValidateFailed(t *testing.T) {
@@ -1820,7 +1964,7 @@ func TestValidateClustersCheckS3Failed(t *testing.T) {
 	checkSummary(
 		t,
 		validate.report,
-		report.Summary{OK: 65, Problem: 1},
+		report.Summary{OK: 89, Problem: 1},
 	)
 }
 

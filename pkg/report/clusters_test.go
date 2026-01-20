@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	ramenapi "github.com/ramendr/ramen/api/v1alpha1"
-	corev1 "k8s.io/api/core/v1"
 	"sigs.k8s.io/yaml"
 
 	"github.com/ramendr/ramenctl/pkg/helpers"
@@ -200,14 +199,49 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].S3Region.Value = helpers.Modified
 		checkClustersNotEqual(t, c1, c2)
 	})
-	t.Run("hub ramen configmap s3storeprofiles secretref state", func(t *testing.T) {
+	t.Run("hub ramen configmap s3storeprofiles secret name state", func(t *testing.T) {
 		c2 := testClusterStatus()
-		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.State = report.Problem
+		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.Name.State = report.Problem
 		checkClustersNotEqual(t, c1, c2)
 	})
-	t.Run("hub ramen configmap s3storeprofiles secretref value name", func(t *testing.T) {
+	t.Run("hub ramen configmap s3storeprofiles secret name value", func(t *testing.T) {
 		c2 := testClusterStatus()
-		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.Value.Name = helpers.Modified
+		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.Name.Value = helpers.Modified
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("hub ramen configmap s3storeprofiles secret namespace state", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.Namespace.State = report.Problem
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("hub ramen configmap s3storeprofiles secret namespace value", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.Namespace.Value = helpers.Modified
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("hub ramen configmap s3storeprofiles secret deleted", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.Deleted.State = report.Problem
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("hub ramen configmap s3storeprofiles secret accesskey state", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.AWSAccessKeyID.State = report.Problem
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("hub ramen configmap s3storeprofiles secret accesskey value", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.AWSAccessKeyID.Value = helpers.Modified
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("hub ramen configmap s3storeprofiles secret secretkey state", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.AWSSecretAccessKey.State = report.Problem
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("hub ramen configmap s3storeprofiles secret secretkey value", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Hub.Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.AWSSecretAccessKey.Value = helpers.Modified
 		checkClustersNotEqual(t, c1, c2)
 	})
 	t.Run("hub ramen configmap s3storeprofiles caCertificate state", func(t *testing.T) {
@@ -349,14 +383,49 @@ func TestReportClusterStatusNotEqual(t *testing.T) {
 		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].S3Region.Value = helpers.Modified
 		checkClustersNotEqual(t, c1, c2)
 	})
-	t.Run("cluster ramen configmap s3storeprofiles secretref state", func(t *testing.T) {
+	t.Run("cluster ramen configmap s3storeprofiles secret name state", func(t *testing.T) {
 		c2 := testClusterStatus()
-		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.State = report.Problem
+		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.Name.State = report.Problem
 		checkClustersNotEqual(t, c1, c2)
 	})
-	t.Run("cluster ramen configmap s3storeprofiles secretref value name", func(t *testing.T) {
+	t.Run("cluster ramen configmap s3storeprofiles secret name value", func(t *testing.T) {
 		c2 := testClusterStatus()
-		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.Value.Name = helpers.Modified
+		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.Name.Value = helpers.Modified
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("cluster ramen configmap s3storeprofiles secret namespace state", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.Namespace.State = report.Problem
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("cluster ramen configmap s3storeprofiles secret namespace value", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.Namespace.Value = helpers.Modified
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("cluster ramen configmap s3storeprofiles secret deleted", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.Deleted.State = report.Problem
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("cluster ramen configmap s3storeprofiles secret accesskey state", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.AWSAccessKeyID.State = report.Problem
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("cluster ramen configmap s3storeprofiles secret accesskey value", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.AWSAccessKeyID.Value = helpers.Modified
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("cluster ramen configmap s3storeprofiles secret secretkey state", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.AWSSecretAccessKey.State = report.Problem
+		checkClustersNotEqual(t, c1, c2)
+	})
+	t.Run("cluster ramen configmap s3storeprofiles secret secretkey value", func(t *testing.T) {
+		c2 := testClusterStatus()
+		c2.Clusters[0].Ramen.ConfigMap.S3StoreProfiles.Value[0].S3SecretRef.AWSSecretAccessKey.Value = helpers.Modified
 		checkClustersNotEqual(t, c1, c2)
 	})
 	t.Run("cluster ramen configmap s3storeprofiles caCertificate state", func(t *testing.T) {
@@ -605,13 +674,25 @@ func testClusterStatus() *report.ClustersStatus {
 									Validated: report.Validated{State: report.OK},
 									Value:     "us-west-1",
 								},
-								S3SecretRef: report.ValidatedS3SecretRef{
-									Validated: report.Validated{
-										State: report.OK,
+								S3SecretRef: report.S3SecretSummary{
+									Name: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "ramen-s3-secret-dr1",
 									},
-									Value: corev1.SecretReference{
-										Name:      "ramen-s3-secret-dr1",
-										Namespace: "ramen-system",
+									Namespace: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "ramen-system",
+									},
+									Deleted: report.ValidatedBool{
+										Validated: report.Validated{State: report.OK},
+									},
+									AWSAccessKeyID: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
+										Value:     helpers.AccessKeyFingerprint,
+									},
+									AWSSecretAccessKey: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
+										Value:     helpers.SecretKeyFingerprint,
 									},
 								},
 								// CACertificate is optional, empty is OK if hub also has no cert.
@@ -633,13 +714,25 @@ func testClusterStatus() *report.ClustersStatus {
 									Validated: report.Validated{State: report.OK},
 									Value:     "us-east-1",
 								},
-								S3SecretRef: report.ValidatedS3SecretRef{
-									Validated: report.Validated{
-										State: report.OK,
+								S3SecretRef: report.S3SecretSummary{
+									Name: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "ramen-s3-secret-dr2",
 									},
-									Value: corev1.SecretReference{
-										Name:      "ramen-s3-secret-dr2",
-										Namespace: "ramen-system",
+									Namespace: report.ValidatedString{
+										Validated: report.Validated{State: report.OK},
+										Value:     "ramen-system",
+									},
+									Deleted: report.ValidatedBool{
+										Validated: report.Validated{State: report.OK},
+									},
+									AWSAccessKeyID: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
+										Value:     helpers.AccessKeyFingerprint,
+									},
+									AWSSecretAccessKey: report.ValidatedFingerprint{
+										Validated: report.Validated{State: report.OK},
+										Value:     helpers.SecretKeyFingerprint,
 									},
 								},
 								CACertificate: report.ValidatedFingerprint{
@@ -717,13 +810,25 @@ func testClusterStatus() *report.ClustersStatus {
 										Validated: report.Validated{State: report.OK},
 										Value:     "us-west-1",
 									},
-									S3SecretRef: report.ValidatedS3SecretRef{
-										Validated: report.Validated{
-											State: report.OK,
+									S3SecretRef: report.S3SecretSummary{
+										Name: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+											Value:     "ramen-s3-secret-dr1",
 										},
-										Value: corev1.SecretReference{
-											Name:      "ramen-s3-secret-dr1",
-											Namespace: "ramen-system",
+										Namespace: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+											Value:     "ramen-system",
+										},
+										Deleted: report.ValidatedBool{
+											Validated: report.Validated{State: report.OK},
+										},
+										AWSAccessKeyID: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.AccessKeyFingerprint,
+										},
+										AWSSecretAccessKey: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.SecretKeyFingerprint,
 										},
 									},
 									CACertificate: report.ValidatedFingerprint{
@@ -744,13 +849,25 @@ func testClusterStatus() *report.ClustersStatus {
 										Validated: report.Validated{State: report.OK},
 										Value:     "us-east-1",
 									},
-									S3SecretRef: report.ValidatedS3SecretRef{
-										Validated: report.Validated{
-											State: report.OK,
+									S3SecretRef: report.S3SecretSummary{
+										Name: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+											Value:     "ramen-s3-secret-dr2",
 										},
-										Value: corev1.SecretReference{
-											Name:      "ramen-s3-secret-dr2",
-											Namespace: "ramen-system",
+										Namespace: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+											Value:     "ramen-system",
+										},
+										Deleted: report.ValidatedBool{
+											Validated: report.Validated{State: report.OK},
+										},
+										AWSAccessKeyID: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.AccessKeyFingerprint,
+										},
+										AWSSecretAccessKey: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.SecretKeyFingerprint,
 										},
 									},
 									CACertificate: report.ValidatedFingerprint{
@@ -827,13 +944,25 @@ func testClusterStatus() *report.ClustersStatus {
 										Validated: report.Validated{State: report.OK},
 										Value:     "us-west-1",
 									},
-									S3SecretRef: report.ValidatedS3SecretRef{
-										Validated: report.Validated{
-											State: report.OK,
+									S3SecretRef: report.S3SecretSummary{
+										Name: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+											Value:     "ramen-s3-secret-dr1",
 										},
-										Value: corev1.SecretReference{
-											Name:      "ramen-s3-secret-dr1",
-											Namespace: "ramen-system",
+										Namespace: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+											Value:     "ramen-system",
+										},
+										Deleted: report.ValidatedBool{
+											Validated: report.Validated{State: report.OK},
+										},
+										AWSAccessKeyID: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.AccessKeyFingerprint,
+										},
+										AWSSecretAccessKey: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.SecretKeyFingerprint,
 										},
 									},
 									CACertificate: report.ValidatedFingerprint{
@@ -854,13 +983,25 @@ func testClusterStatus() *report.ClustersStatus {
 										Validated: report.Validated{State: report.OK},
 										Value:     "us-east-1",
 									},
-									S3SecretRef: report.ValidatedS3SecretRef{
-										Validated: report.Validated{
-											State: report.OK,
+									S3SecretRef: report.S3SecretSummary{
+										Name: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+											Value:     "ramen-s3-secret-dr2",
 										},
-										Value: corev1.SecretReference{
-											Name:      "ramen-s3-secret-dr2",
-											Namespace: "ramen-system",
+										Namespace: report.ValidatedString{
+											Validated: report.Validated{State: report.OK},
+											Value:     "ramen-system",
+										},
+										Deleted: report.ValidatedBool{
+											Validated: report.Validated{State: report.OK},
+										},
+										AWSAccessKeyID: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.AccessKeyFingerprint,
+										},
+										AWSSecretAccessKey: report.ValidatedFingerprint{
+											Validated: report.Validated{State: report.OK},
+											Value:     helpers.SecretKeyFingerprint,
 										},
 									},
 									CACertificate: report.ValidatedFingerprint{

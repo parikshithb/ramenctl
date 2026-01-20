@@ -5,8 +5,6 @@ package report
 
 import (
 	"slices"
-
-	corev1 "k8s.io/api/core/v1"
 )
 
 type ValidationState string
@@ -55,12 +53,6 @@ type ValidatedInteger struct {
 type ValidatedCondition struct {
 	Validated
 	Type string `json:"type"`
-}
-
-// ValidatedS3SecretRef is a validated S3 secret reference.
-type ValidatedS3SecretRef struct {
-	Validated
-	Value corev1.SecretReference `json:"value"`
 }
 
 // ValidatedFingerprint is a validated fingerprint property.
