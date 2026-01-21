@@ -552,15 +552,15 @@ func (c *Command) validatedManagedClusterRequiredString(
 	validated := report.ValidatedString{Value: value}
 
 	switch {
-	case value == "":
-		validated.State = report.Problem
-		validated.Description = "Value is not set"
 	case !found:
 		validated.State = report.Problem
 		validated.Description = "Profile not found in hub"
+	case value == "":
+		validated.State = report.Problem
+		validated.Description = "Value is not set"
 	case value != hubValue.Value:
 		validated.State = report.Problem
-		validated.Description = fmt.Sprintf("Does not match hub: %q", hubValue)
+		validated.Description = fmt.Sprintf("Does not match hub: %q", hubValue.Value)
 	default:
 		validated.State = report.OK
 	}
