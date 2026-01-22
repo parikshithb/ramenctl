@@ -252,7 +252,7 @@ $ ramenctl validate clusters -o out
    ✅ Checked S3 profile "minio-on-dr1"
    ✅ Clusters validated
 
-✅ Validation completed (42 ok, 0 stale, 0 problem)
+✅ Validation completed (90 ok, 0 stale, 0 problem)
 ```
 
 The command gathered cluster scoped and ramen resources from all clusters,
@@ -294,18 +294,60 @@ clustersStatus:
         s3StoreProfiles:
           state: ok ✅
           value:
-          - s3ProfileName: minio-on-dr1
-            s3SecretRef:
+          - bucket:
               state: ok ✅
-              value:
-                name: ramen-s3-secret-dr1
-                namespace: ramen-system
-          - s3ProfileName: minio-on-dr2
-            s3SecretRef:
+              value: bucket
+            caCertificate:
               state: ok ✅
-              value:
-                name: ramen-s3-secret-dr2
-                namespace: ramen-system
+            endpoint:
+              state: ok ✅
+              value: http://dr1-endpoint:30000
+            profileName: minio-on-dr1
+            region:
+              state: ok ✅
+              value: us-west-1
+            secret:
+              awsAccessKeyID:
+                state: ok ✅
+                value: 57:91:B6:22:67...
+              awsSecretAccessKey:
+                state: ok ✅
+                value: 17:9C:07:6A:C5...
+              deleted:
+                state: ok ✅
+              name:
+                state: ok ✅
+                value: ramen-s3-secret-dr1
+              namespace:
+                state: ok ✅
+                value: ramen-system
+          - bucket:
+              state: ok ✅
+              value: bucket
+            caCertificate:
+              state: ok ✅
+            endpoint:
+              state: ok ✅
+              value: http://dr2-endpoint:30000
+            profileName: minio-on-dr2
+            region:
+              state: ok ✅
+              value: us-east-1
+            secret:
+              awsAccessKeyID:
+                state: ok ✅
+                value: 57:91:B6:22:67...
+              awsSecretAccessKey:
+                state: ok ✅
+                value: 17:9C:07:6A:C5...
+              deleted:
+                state: ok ✅
+              name:
+                state: ok ✅
+                value: ramen-s3-secret-dr2
+              namespace:
+                state: ok ✅
+                value: ramen-system
       deployment:
         conditions:
         - state: ok ✅
@@ -332,18 +374,60 @@ clustersStatus:
         s3StoreProfiles:
           state: ok ✅
           value:
-          - s3ProfileName: minio-on-dr1
-            s3SecretRef:
+          - bucket:
               state: ok ✅
-              value:
-                name: ramen-s3-secret-dr1
-                namespace: ramen-system
-          - s3ProfileName: minio-on-dr2
-            s3SecretRef:
+              value: bucket
+            caCertificate:
               state: ok ✅
-              value:
-                name: ramen-s3-secret-dr2
-                namespace: ramen-system
+            endpoint:
+              state: ok ✅
+              value: http://dr1-endpoint:30000
+            profileName: minio-on-dr1
+            region:
+              state: ok ✅
+              value: us-west-1
+            secret:
+              awsAccessKeyID:
+                state: ok ✅
+                value: 57:91:B6:22:67...
+              awsSecretAccessKey:
+                state: ok ✅
+                value: 17:9C:07:6A:C5...
+              deleted:
+                state: ok ✅
+              name:
+                state: ok ✅
+                value: ramen-s3-secret-dr1
+              namespace:
+                state: ok ✅
+                value: ramen-system
+          - bucket:
+              state: ok ✅
+              value: bucket
+            caCertificate:
+              state: ok ✅
+            endpoint:
+              state: ok ✅
+              value: http://dr2-endpoint:30000
+            profileName: minio-on-dr2
+            region:
+              state: ok ✅
+              value: us-east-1
+            secret:
+              awsAccessKeyID:
+                state: ok ✅
+                value: 57:91:B6:22:67...
+              awsSecretAccessKey:
+                state: ok ✅
+                value: 17:9C:07:6A:C5...
+              deleted:
+                state: ok ✅
+              name:
+                state: ok ✅
+                value: ramen-s3-secret-dr2
+              namespace:
+                state: ok ✅
+                value: ramen-system
       deployment:
         conditions:
         - state: ok ✅
@@ -402,18 +486,60 @@ clustersStatus:
         s3StoreProfiles:
           state: ok ✅
           value:
-          - s3ProfileName: minio-on-dr1
-            s3SecretRef:
+          - bucket:
               state: ok ✅
-              value:
-                name: ramen-s3-secret-dr1
-                namespace: ramen-system
-          - s3ProfileName: minio-on-dr2
-            s3SecretRef:
+              value: bucket
+            caCertificate:
               state: ok ✅
-              value:
-                name: ramen-s3-secret-dr2
-                namespace: ramen-system
+            endpoint:
+              state: ok ✅
+              value: http://dr1-endpoint:30000
+            profileName: minio-on-dr1
+            region:
+              state: ok ✅
+              value: us-west-1
+            secret:
+              awsAccessKeyID:
+                state: ok ✅
+                value: 57:91:B6:22:67...
+              awsSecretAccessKey:
+                state: ok ✅
+                value: 17:9C:07:6A:C5...
+              deleted:
+                state: ok ✅
+              name:
+                state: ok ✅
+                value: ramen-s3-secret-dr1
+              namespace:
+                state: ok ✅
+                value: ramen-system
+          - bucket:
+              state: ok ✅
+              value: bucket
+            caCertificate:
+              state: ok ✅
+            endpoint:
+              state: ok ✅
+              value: http://dr2-endpoint:30000
+            profileName: minio-on-dr2
+            region:
+              state: ok ✅
+              value: us-east-1
+            secret:
+              awsAccessKeyID:
+                state: ok ✅
+                value: 57:91:B6:22:67...
+              awsSecretAccessKey:
+                state: ok ✅
+                value: 17:9C:07:6A:C5...
+              deleted:
+                state: ok ✅
+              name:
+                state: ok ✅
+                value: ramen-s3-secret-dr2
+              namespace:
+                state: ok ✅
+                value: ramen-system
       deployment:
         conditions:
         - state: ok ✅
