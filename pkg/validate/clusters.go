@@ -28,6 +28,9 @@ import (
 )
 
 const (
+	// minS3Profiles is the minimum S3 profiles in configmap required for DR.
+	minS3Profiles = 2
+
 	profileNotFoundInHub = "Profile not found in hub"
 )
 
@@ -464,9 +467,10 @@ func (c *Command) validatedHubS3Profiles(
 		s.Value = append(s.Value, ps)
 	}
 
-	if len(s.Value) == 0 {
+	if len(s.Value) < minS3Profiles {
 		s.State = report.Problem
-		s.Description = "No s3 profiles found in hub"
+		s.Description = fmt.Sprintf("Found %d S3 profile(s), expected at least %d",
+			len(s.Value), minS3Profiles)
 	} else {
 		s.State = report.OK
 	}
@@ -522,10 +526,17 @@ func (c *Command) validatedManagedClusterS3Profiles(
 		s.Value = append(s.Value, ps)
 	}
 
-	if len(s.Value) == 0 {
+	hubS3ProfileCount := len(c.report.ClustersStatus.Hub.Ramen.ConfigMap.S3StoreProfiles.Value)
+	switch {
+	case len(s.Value) < minS3Profiles:
 		s.State = report.Problem
-		s.Description = "No s3 profiles found in managed cluster"
-	} else {
+		s.Description = fmt.Sprintf("Found %d S3 profile(s), expected at least %d",
+			len(s.Value), minS3Profiles)
+	case len(s.Value) != hubS3ProfileCount:
+		s.State = report.Problem
+		s.Description = fmt.Sprintf("Found %d S3 profile(s), hub has %d",
+			len(s.Value), hubS3ProfileCount)
+	default:
 		s.State = report.OK
 	}
 	addValidation(c.report.Summary, s)
