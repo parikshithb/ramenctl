@@ -35,13 +35,13 @@ const (
 
 // Profile contains S3 connection and authentication information.
 type Profile struct {
-	Name          string
-	Bucket        string
-	Region        string
-	Endpoint      string
-	CACertificate []byte
-	AccessKey     string
-	SecretKey     string
+	Name               string
+	Bucket             string
+	Region             string
+	Endpoint           string
+	CACertificate      []byte
+	AWSAccessKeyID     []byte
+	AWSSecretAccessKey []byte
 }
 
 // Result represents the result of gathering from an S3 profile.
@@ -189,11 +189,14 @@ func newObjectStore(
 	configOptions := []func(*config.LoadOptions) error{
 		config.WithRegion(profile.Region),
 		config.WithBaseEndpoint(profile.Endpoint),
-		config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(
-			profile.AccessKey,
-			profile.SecretKey,
-			"",
-		)),
+		config.WithCredentialsProvider(
+			// AWS credentials are always ASCII text, safe to convert to string.
+			credentials.NewStaticCredentialsProvider(
+				string(profile.AWSAccessKeyID),
+				string(profile.AWSSecretAccessKey),
+				"",
+			),
+		),
 		// Add zap logger to the config to redirect AWS SDK logs.
 		config.WithLogger(awsSDKLogger(log)),
 	}
