@@ -688,11 +688,11 @@ func testClusterStatus() *report.ClustersStatus {
 									},
 									AWSAccessKeyID: report.ValidatedFingerprint{
 										Validated: report.Validated{State: report.OK},
-										Value:     helpers.AccessKeyFingerprint,
+										Value:     helpers.FakeAWSKeyIDFingerprint,
 									},
 									AWSSecretAccessKey: report.ValidatedFingerprint{
 										Validated: report.Validated{State: report.OK},
-										Value:     helpers.SecretKeyFingerprint,
+										Value:     helpers.FakeAWSKeyFingerprint,
 									},
 								},
 								// CACertificate is optional, empty is OK if hub also has no cert.
@@ -728,11 +728,11 @@ func testClusterStatus() *report.ClustersStatus {
 									},
 									AWSAccessKeyID: report.ValidatedFingerprint{
 										Validated: report.Validated{State: report.OK},
-										Value:     helpers.AccessKeyFingerprint,
+										Value:     helpers.FakeAWSKeyIDFingerprint,
 									},
 									AWSSecretAccessKey: report.ValidatedFingerprint{
 										Validated: report.Validated{State: report.OK},
-										Value:     helpers.SecretKeyFingerprint,
+										Value:     helpers.FakeAWSKeyFingerprint,
 									},
 								},
 								CACertificate: report.ValidatedFingerprint{
@@ -824,11 +824,11 @@ func testClusterStatus() *report.ClustersStatus {
 										},
 										AWSAccessKeyID: report.ValidatedFingerprint{
 											Validated: report.Validated{State: report.OK},
-											Value:     helpers.AccessKeyFingerprint,
+											Value:     helpers.FakeAWSKeyIDFingerprint,
 										},
 										AWSSecretAccessKey: report.ValidatedFingerprint{
 											Validated: report.Validated{State: report.OK},
-											Value:     helpers.SecretKeyFingerprint,
+											Value:     helpers.FakeAWSKeyFingerprint,
 										},
 									},
 									CACertificate: report.ValidatedFingerprint{
@@ -863,11 +863,11 @@ func testClusterStatus() *report.ClustersStatus {
 										},
 										AWSAccessKeyID: report.ValidatedFingerprint{
 											Validated: report.Validated{State: report.OK},
-											Value:     helpers.AccessKeyFingerprint,
+											Value:     helpers.FakeAWSKeyIDFingerprint,
 										},
 										AWSSecretAccessKey: report.ValidatedFingerprint{
 											Validated: report.Validated{State: report.OK},
-											Value:     helpers.SecretKeyFingerprint,
+											Value:     helpers.FakeAWSKeyFingerprint,
 										},
 									},
 									CACertificate: report.ValidatedFingerprint{
@@ -958,11 +958,11 @@ func testClusterStatus() *report.ClustersStatus {
 										},
 										AWSAccessKeyID: report.ValidatedFingerprint{
 											Validated: report.Validated{State: report.OK},
-											Value:     helpers.AccessKeyFingerprint,
+											Value:     helpers.FakeAWSKeyIDFingerprint,
 										},
 										AWSSecretAccessKey: report.ValidatedFingerprint{
 											Validated: report.Validated{State: report.OK},
-											Value:     helpers.SecretKeyFingerprint,
+											Value:     helpers.FakeAWSKeyFingerprint,
 										},
 									},
 									CACertificate: report.ValidatedFingerprint{
@@ -997,11 +997,11 @@ func testClusterStatus() *report.ClustersStatus {
 										},
 										AWSAccessKeyID: report.ValidatedFingerprint{
 											Validated: report.Validated{State: report.OK},
-											Value:     helpers.AccessKeyFingerprint,
+											Value:     helpers.FakeAWSKeyIDFingerprint,
 										},
 										AWSSecretAccessKey: report.ValidatedFingerprint{
 											Validated: report.Validated{State: report.OK},
-											Value:     helpers.SecretKeyFingerprint,
+											Value:     helpers.FakeAWSKeyFingerprint,
 										},
 									},
 									CACertificate: report.ValidatedFingerprint{
