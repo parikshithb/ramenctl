@@ -269,13 +269,13 @@ func ClusterProfiles(
 		}
 		accessKeyID, secretAccessKey := getS3SecretKeys(reader, secretName, secretNamespace)
 		profiles = append(profiles, &s3.Profile{
-			Name:          storeProfile.S3ProfileName,
-			Bucket:        storeProfile.S3Bucket,
-			Region:        storeProfile.S3Region,
-			Endpoint:      storeProfile.S3CompatibleEndpoint,
-			CACertificate: storeProfile.CACertificates,
-			AccessKey:     accessKeyID,
-			SecretKey:     secretAccessKey,
+			Name:               storeProfile.S3ProfileName,
+			Bucket:             storeProfile.S3Bucket,
+			Region:             storeProfile.S3Region,
+			Endpoint:           storeProfile.S3CompatibleEndpoint,
+			CACertificate:      storeProfile.CACertificates,
+			AWSAccessKeyID:     accessKeyID,
+			AWSSecretAccessKey: secretAccessKey,
 		})
 	}
 	return profiles, nil
@@ -321,13 +321,13 @@ func getRamenConfigMapData(
 func getS3SecretKeys(
 	reader gathering.OutputReader,
 	name, namespace string,
-) (string, string) {
+) ([]byte, []byte) {
 	secret, err := core.ReadSecret(reader, name, namespace)
 	if err != nil {
-		return "", ""
+		return nil, nil
 	}
-	accessKeyID := string(secret.Data["AWS_ACCESS_KEY_ID"])
-	secretAccessKey := string(secret.Data["AWS_SECRET_ACCESS_KEY"])
+	accessKeyID := secret.Data["AWS_ACCESS_KEY_ID"]
+	secretAccessKey := secret.Data["AWS_SECRET_ACCESS_KEY"]
 	return accessKeyID, secretAccessKey
 }
 
