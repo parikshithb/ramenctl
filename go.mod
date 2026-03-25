@@ -1,10 +1,10 @@
 module github.com/ramendr/ramenctl
 
 // Required minimum version, must be available in downstream builders.
-go 1.24.0
+go 1.25.0
 
-// Recommended version: latest go 1.25 release.
-toolchain go1.25.3
+// Recommended version: latest go release.
+toolchain go1.26.1
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.39.5
@@ -12,18 +12,18 @@ require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.18.20
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.89.1
 	github.com/aws/smithy-go v1.23.2
-	github.com/aymanbagabas/go-udiff v0.3.1
+	github.com/aymanbagabas/go-udiff v0.4.1
 	github.com/go-logr/zapr v1.3.0
 	github.com/nirs/kubectl-gather v0.10.1
 	github.com/ramendr/ramen/api v0.0.0-20260302102746-0080ff0b2f30
 	github.com/ramendr/ramen/e2e v0.0.0-20260303090636-b77204c8e780
-	github.com/spf13/cobra v1.9.1
+	github.com/spf13/cobra v1.10.2
 	github.com/spf13/viper v1.19.0
 	github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4
-	go.uber.org/zap v1.27.0
-	k8s.io/api v0.33.2
-	k8s.io/apimachinery v0.33.2
-	k8s.io/client-go v0.33.2
+	go.uber.org/zap v1.27.1
+	k8s.io/api v0.33.10
+	k8s.io/apimachinery v0.33.10
+	k8s.io/client-go v0.33.10
 	k8s.io/klog/v2 v2.130.1
 	open-cluster-management.io/api v0.15.0
 	sigs.k8s.io/controller-runtime v0.21.0
@@ -80,7 +80,7 @@ require (
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect
-	github.com/spf13/pflag v1.0.6 // indirect
+	github.com/spf13/pflag v1.0.9 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
