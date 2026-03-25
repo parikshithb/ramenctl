@@ -5,6 +5,7 @@ package gathering
 
 import (
 	"context"
+	"encoding/base64"
 	"path/filepath"
 	"sync"
 	"time"
@@ -46,13 +47,17 @@ func Namespaces(ctx Context, clusters []*types.Cluster, options Options) <-chan 
 	results := make(chan Result)
 	var wg sync.WaitGroup
 
+	// Generate salt once so all clusters sanitize secrets with the same salt.
+	salt := gather.RandomSalt()
+	ctx.Logger().Infof("Using generated salt %q", base64.StdEncoding.EncodeToString(salt[:]))
+
 	// Start gathering in parallel for all clusters.
 	for _, cluster := range clusters {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
 			start := time.Now()
-			err := gatherCluster(ctx, cluster, options)
+			err := gatherCluster(ctx, cluster, options, salt)
 			results <- Result{Name: cluster.Name, Err: err, Duration: time.Since(start).Seconds()}
 		}()
 	}
@@ -66,7 +71,7 @@ func Namespaces(ctx Context, clusters []*types.Cluster, options Options) <-chan 
 	return results
 }
 
-func gatherCluster(ctx Context, cluster *types.Cluster, options Options) error {
+func gatherCluster(ctx Context, cluster *types.Cluster, options Options, salt gather.Salt) error {
 	start := time.Now()
 	log := ctx.Logger()
 
@@ -82,6 +87,7 @@ func gatherCluster(ctx Context, cluster *types.Cluster, options Options) error {
 		Kubeconfig: cluster.Kubeconfig,
 		Namespaces: options.Namespaces,
 		Cluster:    options.Cluster,
+		Salt:       salt,
 		Log:        log.Named(cluster.Name),
 	}
 
