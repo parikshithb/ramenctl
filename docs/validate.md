@@ -193,7 +193,8 @@ applicationStatus:
 
 This directory contains all data gathered during validation. The data depend on
 the application deployment type. Use the gathered data to investigate the
-problems reported in the `validate-application.yaml` report.
+problems reported in the `validate-application.yaml` report. Secrets in the
+gathered data are automatically [sanitized](https://github.com/nirs/kubectl-gather#secret-sanitization).
 
 ```console
 $ tree -L3 out/validate-application.data
@@ -570,10 +571,16 @@ clustersStatus:
         name: minio-on-dr1
 ```
 
+Secret values are validated using sanitized fingerprints. Since the hashing is
+deterministic, the same secret value produces the same fingerprint, allowing
+validation across clusters
+
 ### The validate-clusters.data directory
 
 This directory contains all data gathered during validation. Use the gathered
-data to investigate the problems reported in the `validate-clusters.yaml` report.
+data to investigate the problems reported in the `validate-clusters.yaml`
+report. Secrets in the gathered data are automatically
+[sanitized](https://github.com/nirs/kubectl-gather#secret-sanitization).
 
 ```console
 $ tree -L3 out/validate-clusters.data
