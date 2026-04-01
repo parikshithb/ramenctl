@@ -119,6 +119,10 @@ out/gather-application.data
         └── test-appset-deploy-rbd
 ```
 
+Secrets in the gathered data are automatically sanitized. See [Secret
+sanitization](https://github.com/nirs/kubectl-gather#secret-sanitization) for
+more info.
+
 You can use standard tools to inspect the resources:
 
 ```console
