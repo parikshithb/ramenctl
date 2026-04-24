@@ -250,14 +250,21 @@ func (s *objectStore) downloadObjects(ctx context.Context, prefix, outputDir str
 			profileDir, prefix, err)
 	}
 
-	downloaded := 0
+	var errs []error
 	for _, key := range keys {
 		if err := s.downloadObject(ctx, key, profileDir); err != nil {
 			s.log.Warnf("Failed to download object %q from bucket %q: %v",
 				key, s.profile.Bucket, err)
+			errs = append(errs, err)
 			continue
 		}
-		downloaded++
+	}
+
+	downloaded := len(keys) - len(errs)
+
+	if len(errs) > 0 {
+		return fmt.Errorf("downloaded %d/%d objects from bucket %q: %w",
+			downloaded, len(keys), s.profile.Bucket, errors.Join(errs...))
 	}
 
 	s.log.Debugf("Downloaded %d/%d objects from bucket %q in %.3f seconds",
