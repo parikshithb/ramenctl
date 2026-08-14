@@ -17,6 +17,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/yaml"
 
+	"github.com/ramendr/ramenctl/pkg/config"
 	"github.com/ramendr/ramenctl/pkg/core"
 	"github.com/ramendr/ramenctl/pkg/gathering"
 	"github.com/ramendr/ramenctl/pkg/s3"
@@ -116,6 +117,8 @@ var knownVRGConditionTypes = map[string]struct{}{
 type Context interface {
 	Env() *e2etypes.Env
 	Context() context.Context
+	Config() *config.Config
+	OutputReader(cluster string) gathering.OutputReader
 }
 
 // OperatorDeploymentName returns the deployment name for the given controller type.
