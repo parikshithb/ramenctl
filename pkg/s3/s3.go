@@ -184,7 +184,10 @@ func checkBucket(
 
 	// HeadBucket response is dropped since it contains optional location metadata (usually nil)
 	// and internal SDK result metadata with no useful debugging information.
-	_, err = objectStore.client.HeadBucket(ctx, &s3.HeadBucketInput{
+	reqCtx, cancel := context.WithTimeout(ctx, objectStore.timeout)
+	defer cancel()
+
+	_, err = objectStore.client.HeadBucket(reqCtx, &s3.HeadBucketInput{
 		Bucket: aws.String(profile.Bucket),
 	})
 	if err != nil {
@@ -271,7 +274,7 @@ func (s *objectStore) downloadObjects(ctx context.Context, prefix, outputDir str
 
 	var total, failed int
 	for paginator.HasMorePages() {
-		page, err := paginator.NextPage(ctx)
+		page, err := s.nextPage(paginator, ctx)
 		if err != nil {
 			s.log.Warnf("Failed to list objects in bucket %q with prefix %q: %v",
 				s.profile.Bucket, prefix, err)
@@ -309,7 +312,10 @@ func (s *objectStore) downloadObjects(ctx context.Context, prefix, outputDir str
 func (s *objectStore) downloadObject(ctx context.Context, key, profileDir string) error {
 	start := time.Now()
 
-	result, err := s.client.GetObject(ctx, &s3.GetObjectInput{
+	reqCtx, cancel := context.WithTimeout(ctx, s.timeout)
+	defer cancel()
+
+	result, err := s.client.GetObject(reqCtx, &s3.GetObjectInput{
 		Bucket: aws.String(s.profile.Bucket),
 		Key:    aws.String(key),
 	})
@@ -372,6 +378,17 @@ func (s *objectStore) downloadObject(ctx context.Context, key, profileDir string
 		key, encoding, time.Since(start).Seconds())
 
 	return nil
+}
+
+// nextPage returns the next page of listed objects with a per-request timeout.
+func (s *objectStore) nextPage(
+	p *s3.ListObjectsV2Paginator,
+	ctx context.Context,
+) (*s3.ListObjectsV2Output, error) {
+	reqCtx, cancel := context.WithTimeout(ctx, s.timeout)
+	defer cancel()
+
+	return p.NextPage(reqCtx)
 }
 
 // awsSDKLogger creates an AWS SDK logger that redirects logs to zap logger.
