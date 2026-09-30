@@ -5,6 +5,7 @@ package config_test
 
 import (
 	"reflect"
+	"strings"
 	"testing"
 
 	e2econfig "github.com/ramendr/ramen/e2e/config"
@@ -126,6 +127,31 @@ func TestReadConfigWithPassiveHub(t *testing.T) {
 		diff := helpers.UnifiedDiff(t, expected, c)
 		t.Fatalf("configs not equal\n%s", diff)
 	}
+}
+
+func TestReadConfigDuplicateKubeconfig(t *testing.T) {
+	t.Run("managed clusters", func(t *testing.T) {
+		_, err := config.ReadConfig("testdata/duplicate-kubeconfig.yaml")
+		if err == nil {
+			t.Fatal("expected error for duplicate kubeconfig paths")
+		}
+		for _, s := range []string{`"c1"`, `"c2"`, `"dr1/config"`} {
+			if !strings.Contains(err.Error(), s) {
+				t.Fatalf("expected error to contain %s, got %q", s, err)
+			}
+		}
+	})
+	t.Run("hub and managed cluster", func(t *testing.T) {
+		_, err := config.ReadConfig("testdata/duplicate-kubeconfig-hub.yaml")
+		if err == nil {
+			t.Fatal("expected error for duplicate kubeconfig paths")
+		}
+		for _, s := range []string{`"c1"`, `"hub"`, `"hub/config"`} {
+			if !strings.Contains(err.Error(), s) {
+				t.Fatalf("expected error to contain %s, got %q", s, err)
+			}
+		}
+	})
 }
 
 func TestConfigEqual(t *testing.T) {

@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"maps"
 	"os"
+	"slices"
 
 	"github.com/ramendr/ramen/e2e/config"
 	"github.com/spf13/viper"
@@ -144,6 +145,20 @@ func (c *Config) validateClusters() error {
 	if c.Clusters["c2"].Kubeconfig == "" {
 		return fmt.Errorf("failed to find c2 cluster in configuration")
 	}
+
+	// Ensure no two clusters share the same kubeconfig path.
+	seen := make(map[string]string)
+
+	for _, name := range slices.Sorted(maps.Keys(c.Clusters)) {
+		kubeconfig := c.Clusters[name].Kubeconfig
+		if other, exists := seen[kubeconfig]; exists {
+			return fmt.Errorf("clusters %q and %q use the same kubeconfig path %q",
+				other, name, kubeconfig)
+		}
+
+		seen[kubeconfig] = name
+	}
+
 	return nil
 }
 
